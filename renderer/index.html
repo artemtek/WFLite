@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Electron App</title>
+</head>
+<body>
+  <h1>Welcome to My Electron App</h1>
+  <button id="fetchData">Fetch Data from Express</button>
+  <div id="output"></div>
+
+  <script>
+    document.getElementById('fetchData').addEventListener('click', () => {
+      // Use the Fetch API to call the Express backend
+      fetch('http://localhost:3000/api/hello')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('output').textContent = data.message;
+        })
+        .catch(err => {
+          console.error('Error fetching data:', err);
+        });
+    });
+  </script>
+</body>
+</html>
