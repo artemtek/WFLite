@@ -2,24 +2,74 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>My Electron App</title>
+  <title>Terminally</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #1e1e1e;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #output {
+      flex-grow: 1;
+      background-color: #282828;
+      border: none;
+      color: #98c379;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+      resize: none;
+      outline: none;
+    }
+
+    #input {
+      background-color: #282828;
+      border: none;
+      color: #98c379;
+      font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      padding: 12px;
+      outline: none;
+    }
+
+    #input::placeholder {
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-  <h1>Welcome to My Electron App</h1>
-  <button id="fetchData">Fetch Data from Express</button>
-  <div id="output"></div>
+  <textarea id="output" readonly>Welcome to Terminally v1.0.0
+Type 'help' for available commands.
+
+></textarea>
+  <input type="text" id="input" placeholder="Enter command..." autofocus>
 
   <script>
-    document.getElementById('fetchData').addEventListener('click', () => {
-      // Use the Fetch API to call the Express backend
-      fetch('http://localhost:3000/api/hello')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('output').textContent = data.message;
-        })
-        .catch(err => {
-          console.error('Error fetching data:', err);
-        });
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+
+    input.addEventListener('keypress', async (e) => {
+      if (e.key === 'Enter') {
+        const command = input.value;
+        input.value = '';
+        
+        // Add command to output
+        output.value += command + '\n';
+
+        try {
+          const result = await window.electronAPI.executeCommand(command);
+          output.value += result.output + '\n>';
+        } catch (error) {
+          output.value += `Error: ${error.message}\n>`;
+        }
+
+        // Scroll to bottom
+        output.scrollTop = output.scrollHeight;
+      }
     });
   </script>
 </body>

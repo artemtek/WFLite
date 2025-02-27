@@ -1,52 +1,78 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const spawn = require('child_process').spawn;
+const { spawn } = require('child_process');
 
 let mainWindow;
 
+// Function to create the browser window.
 function createWindow() {
-	mainWindow = new BrowserWindow({
-		width: 800,
-		height: 600,
-		webPreferences: {
-			nodeIntegration: true,
-		},
-	});
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,  // For accessing Node.js APIs in the renderer (be cautious with security)
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js')
+    }
+  });
 
-	mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+  // Load the frontend HTML file
+  mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
-	mainWindow.on('closed', () => {
-		mainWindow = null;
-	});
+  mainWindow.on('closed', function () {
+    mainWindow = null;
+  });
 }
 
-app.whenReady().then(() => {
-	createWindow();
+// Handle command execution
+ipcMain.handle('execute-command', async (event, command) => {
+  if (!command) {
+    throw new Error('Command is required');
+  }
+
+  return new Promise((resolve, reject) => {
+    const [cmd, ...args] = command.split(' ');
+    const process = spawn(cmd, args);
+    
+    let output = '';
+    let error = '';
+
+    process.stdout.on('data', (data) => {
+      output += data.toString();
+    });
+
+    process.stderr.on('data', (data) => {
+      error += data.toString();
+    });
+
+    process.on('close', (code) => {
+      resolve({
+        success: code === 0,
+        output: output || error,
+        code
+      });
+    });
+
+    process.on('error', (err) => {
+      reject({
+        success: false,
+        error: err.message,
+        code: 1
+      });
+    });
+  });
 });
 
-function startServer() {
-	// spawn the server process in a new child process
-	const serverProcess = spawn('node', [path.join(__dirname, 'server.js')]);
-
-	serverProcess.stdout.on('data', (data) => {
-		console.log(data.toString());
-	});
-
-	serverProcess.stderr.on('data', (data) => {
-		console.error(data.toString());
-	});
-}
-
-
-app.on('window-all-closed', () => {
-	if (process.platform !== 'darwin') {
-		app.quit();
-	}
+// Called when Electron is ready
+app.on('ready', () => {
+  createWindow();
 });
 
+app.on('window-all-closed', function () {
+  // On macOS, apps generally stay open until the user explicitly quits
+  if (process.platform !== 'darwin') app.quit();
+});
 
-app.on('activate', () => {
-	if (mainWindow === null) {
-		createWindow();
-	}
+app.on('activate', function () {
+  if (mainWindow === null) createWindow();
 });

@@ -1,0 +1,16 @@
+this is a workflow editor app. it will contain LiteGraph.js for UI and spawn commands, either docker or local to run commands.
+
+# Test
+- [x] create a simple command line tool to test this UI
+- [x] create a simple command line tool to test this backend
+
+
+
+# Features
+- [ ] integrate LiteGraph.js
+- [ ] add a button to spawn a new graph
+- [ ] add a button to save the graph
+- [ ] add a button to load the graph
+- [ ] add a button to run the graph
+- [ ] add a button to stop the graph
+- [ ] add a button to step through the graph
