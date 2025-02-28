@@ -7,8 +7,8 @@ let mainWindow;
 // Function to create the browser window.
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 2000,
+    height: 1200,
     webPreferences: {
       nodeIntegration: true,  // For accessing Node.js APIs in the renderer (be cautious with security)
       contextIsolation: true,
@@ -18,6 +18,8 @@ function createWindow() {
 
   // Load the frontend HTML file
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+
+  mainWindow.webContents.openDevTools();
 
   mainWindow.on('closed', function () {
     mainWindow = null;
@@ -33,7 +35,7 @@ ipcMain.handle('execute-command', async (event, command) => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(' ');
     const process = spawn(cmd, args);
-    
+
     let output = '';
     let error = '';
 
