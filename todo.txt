@@ -21,9 +21,9 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [ ] run steps logic
 
 
-- [ ] add example ICT plugin
+- [x] add example ICT plugin
 - [ ] write parser ICT -> LiteGraph.js
-- [ ] add example WIPP plugin
+- [x] add example WIPP plugin
 - [ ] write parser WIPP -> LiteGraph.js
 
 
