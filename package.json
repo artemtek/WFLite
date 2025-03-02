@@ -1,9 +1,10 @@
 {
   "name": "lite",
   "version": "1.0.0",
+  "type": "module",
   "main": "main.js",
   "scripts": {
-    "start": "nodemon --quiet --watch main.js --watch preload.js --watch renderer --ext js,html,css --exec \"electron --no-focus .\"",
+    "start": "nodemon --quiet --watch main.js --watch preload.cjs --watch renderer --ext js,html,css --exec \"electron --no-focus .\"",
     "build": "electron-builder",
     "pack": "electron-builder --dir"
   },
