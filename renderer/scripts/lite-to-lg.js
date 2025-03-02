@@ -1,14 +1,31 @@
+/**
+ * @description create a LiteGraph.js node from a JSON object
+ * @param {Object} json
+ * @returns {LiteGraph.Node}
+ */
 function createLiteGraphNodeFromJSON(json) {
 
+    /**
+     * @description Custom node class for LiteGraph.js
+     */
     class CustomNode {
 
-        // LiteGraph properties
+        /**
+         * @description properties of the node
+         * @type {Record<string, any>}
+         */
         properties = {};
 
-        // stash of widgets to remove when visibleWhen changes
-        widgetStash = new Map(); // { id: { index, widget } }
+        /**
+         * @description stash of widgets to remove when visibleWhen changes
+         * @type {Map<string, { index: number, widget: LiteGraph.Widget }>}
+         */
+        widgetStash = new Map();
 
-        // functions to evaluate the visibleWhen expressions
+        /**
+         * @description functions to evaluate the visibleWhen expressions
+         * @type {Map<string, Function>}
+         */
         visibleWhenFunctions = new Map();
 
         constructor() {
@@ -110,11 +127,14 @@ function createLiteGraphNodeFromJSON(json) {
                         visibleWhenExpressions.set(input.id, ui.visibleWhen);
                     }
 
+                    // set id so we can find it by id
                     widget.id = input.id;
+
+                    // highjack the callback to run the checks
                     const callback = widget.callback;
                     widget.callback = (v) => {
                         callback(v);
-                        this.updateValue();
+                        this.runChecks();
                     };
                 });
 
@@ -125,16 +145,13 @@ function createLiteGraphNodeFromJSON(json) {
                     this.visibleWhenFunctions.set(key, func);
                 });
             }
-
-
-
-
-            // this.removeWidget("showAdvanced1");
         }
 
 
-
-        updateValue() {
+        /**
+         * @description run the checks for the visibleWhen expressions
+         */
+        runChecks() {
             const properties = this.properties;
             this.visibleWhenFunctions.forEach((func, key) => {
 
@@ -169,6 +186,10 @@ function createLiteGraphNodeFromJSON(json) {
 
         }
 
+        /**
+         * @description remove a widget from the node
+         * @param {string} id
+         */
         removeWidget(id) {
             const index = this.widgets.findIndex((widget) => widget.id === id);
             if (index !== -1) {
