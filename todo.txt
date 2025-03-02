@@ -15,6 +15,11 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [x] add types: directory
 - [x] add conditional inputs within nodes
 
+- [ ] save and load graph state to/from file
+
+- [ ] allow docker image id instead of command, and build command dynamically including volumes
+
+- [ ] add run button to execute the graph
 
 - [ ] add example ICT plugin
 - [ ] write parser ICT -> LiteGraph.js
@@ -25,8 +30,7 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [ ] run steps logic
 
 - [ ] remove nodes that can't be used in the UI
-- [ ] ability to store imported plugins somewhere (local or db?)
-- [ ] save and load graph state to/from file
+- [ ] store imported plugins somewhere (local or db?)
 - [ ] create plugins registry somewhere, or ship it with the app
 - [ ] support ICT, WIPP, and custom format plugins
 - [ ] export to CWL, WIC, Argo and other workflow formats

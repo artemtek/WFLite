@@ -1,3 +1,5 @@
+import { createLiteGraphNodeFromJSON } from "./scripts/lite-to-lg.js";
+
 async function runApp() {
 
   const plugins = await window.electronAPI.loadPlugins()
@@ -10,25 +12,11 @@ async function runApp() {
   const canvas = new LGraphCanvas("#mycanvas", graph);
 
 
-  // Create nodes
-  // const node_tttsub = LiteGraph.createNode("basic/tttsub");
-  // node_tttsub.pos = [200, 100];
-  // graph.add(node_tttsub);
-
-
   const node_const = LiteGraph.createNode("plugin/simple-converter-plugin");
   node_const.pos = [200, 200];
   graph.add(node_const);
   // node_const.setValue("echo 'Hello World'");
-
-  // const node_watch = LiteGraph.createNode("basic/watch");
-  // node_watch.pos = [700, 200];
-  // graph.add(node_watch);
-
   // node_const.connect(0, node_watch, 0);
-
-  // list all nodes types
-  // console.log(LiteGraph);
 
   // Set size to match window
   function resizeCanvas() {
@@ -52,40 +40,6 @@ async function runApp() {
     logArea.value += `\n${message}\n>`;
     logArea.scrollTop = logArea.scrollHeight;
   }
-
-  // // Button to dynamically add a node type
-  // const addNodeBtn = document.getElementById('addNodeBtn');
-  // addNodeBtn.addEventListener('click', () => {
-  //   function MyAddNode() {
-  //     this.addInput("A", "number");
-  //     this.addInput("B", "number");
-  //     this.addOutput("A+B", "number");
-  //     this.properties = { precision: 1 };
-  //   }
-
-  //   //name to show
-  //   MyAddNode.title = "tttsub";
-
-  //   //function to call when the node is executed
-  //   MyAddNode.prototype.onExecute = function () {
-  //     console.log("onExecute");
-  //     let A = this.getInputData(0);
-  //     if (A === undefined)
-  //       A = 0;
-  //     let B = this.getInputData(1);
-  //     if (B === undefined)
-  //       B = 0;
-  //     this.setOutputData(0, A + B);
-  //   }
-
-  //   // //register in the system
-  //   LiteGraph.registerNodeType("basic/tttsub", MyAddNode);
-
-  //   console.log("Node added");
-  // });
-
-
-
 
   // Button to execute the command
   const executeBtn = document.getElementById('executeBtn');

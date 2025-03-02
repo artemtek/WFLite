@@ -28,8 +28,6 @@ SimpleConverterNode.desc = "Converts a file from one format to another using a D
 // Register the node type in LiteGraph under a custom category ("plugin")
 LiteGraph.registerNodeType("plugin/simple_converter", SimpleConverterNode);
 
-
-
 class FolderPickerNode {
     title = "Folder Picker";
     desc = "Select a folder from the user's machine.";

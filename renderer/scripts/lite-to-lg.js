@@ -3,7 +3,7 @@
  * @param {Object} json
  * @returns {LiteGraph.Node}
  */
-function createLiteGraphNodeFromJSON(json) {
+export function createLiteGraphNodeFromJSON(json) {
 
     /**
      * @description Custom node class for LiteGraph.js
@@ -180,10 +180,7 @@ function createLiteGraphNodeFromJSON(json) {
                         this.widgetStash.delete(key);
                     }
                 }
-
             });
-
-
         }
 
         /**

@@ -9,9 +9,6 @@
 </head>
 
 <body>
-  <!-- button to dynamically add a node type -->
-  <button id="addNodeBtn" class="add-node-button">Add Node</button>
-
   <button id="executeBtn" class="execute-button">Execute Command</button>
   <!-- <button id="compileBtn" class="compile-button">Compile Graph</button> -->
   <div class="graph-container">
@@ -22,10 +19,15 @@
 ></textarea>
   </div>
 
+  <!-- litegraph.js -->
   <script src="../node_modules/litegraph.js/build/litegraph.js"></script>
-  <script src="../renderer/scripts/lite-to-lg.js"></script>
+
+  <!-- custom nodes -->
   <script src="../nodes/nodes.js"></script>
-  <script src="app.js"></script>
+
+  <!-- app -->
+  <script type="module" src="app.js"></script>
+
 </body>
 
 </html>
