@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
 const fs = require('fs');
@@ -72,6 +72,59 @@ ipcMain.handle('load-plugins', async (event) => {
   const parsedPlugins = plugins.map(plugin => JSON.parse(fs.readFileSync(path.join(__dirname, 'plugins', plugin), 'utf8')));
   return parsedPlugins;
 });
+
+// Handle the file open dialog and file reading
+ipcMain.handle('dialog-open-file', async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    properties: ['openFile'],
+    filters: [
+      { name: 'JSON', extensions: ['json'] }
+    ]
+  });
+  if (canceled || filePaths.length === 0) {
+    return null;
+  } else {
+    const filePath = filePaths[0];
+    // Read file contents (adjust encoding as needed)
+    const data = fs.readFileSync(filePath, 'utf8');
+
+    // try to parse the data as json
+    try {
+      return JSON.parse(data);
+    } catch (e) {
+      // throw error, show alert
+      dialog.showMessageBox({
+        title: 'Error',
+        message: 'Failed to parse the file as JSON',
+        detail: e.message
+      });
+      return null;
+    }
+  }
+});
+
+// Handle the file save dialog and file writing
+ipcMain.handle('dialog-save-file', async (data) => {
+  const { canceled, filePath } = await dialog.showSaveDialog({
+    properties: ['saveFile'],
+    filters: [
+      { name: 'JSON', extensions: ['json'] }
+    ],
+    defaultPath: 'graph.json'
+  });
+  if (canceled || !filePath) {
+    return null;
+  } else {
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+    dialog.showMessageBox({
+      title: 'Success',
+      message: 'File saved successfully',
+      detail: filePath
+    });
+    return filePath;
+  }
+});
+
 
 // Called when Electron is ready
 app.on('ready', () => {

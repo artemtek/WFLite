@@ -14,8 +14,7 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [x] add types: number, string, boolean
 - [x] add types: directory
 - [x] add conditional inputs within nodes
-
-- [ ] save and load graph state to/from file
+- [x] save and load graph state to/from file
 
 - [ ] allow docker image id instead of command, and build command dynamically including volumes
 

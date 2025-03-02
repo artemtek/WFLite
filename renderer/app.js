@@ -31,9 +31,6 @@ async function runApp() {
   // Handle window resizing
   window.addEventListener('resize', resizeCanvas);
 
-  // Start rendering
-  // graph.start();
-
   // Example logging function
   function log(message) {
     const logArea = document.getElementById('log');
@@ -41,7 +38,7 @@ async function runApp() {
     logArea.scrollTop = logArea.scrollHeight;
   }
 
-  // Button to execute the command
+  // Button: Execute command
   const executeBtn = document.getElementById('executeBtn');
   executeBtn.addEventListener('click', async () => {
     // Get the string node's value
@@ -50,10 +47,7 @@ async function runApp() {
     const mainNode = nodes[0];
     const command = mainNode.properties.value;
 
-    console.log(command);
-
     try {
-      // Execute the command via IPC
       const result = await window.electronAPI.executeCommand(command);
       log(`Executing: ${command}`);
       log(result.output);
@@ -62,6 +56,23 @@ async function runApp() {
     }
   });
 
+  // Button: Save
+  const saveBtn = document.getElementById('saveBtn');
+  saveBtn.addEventListener('click', async () => {
+    const ser = graph.serialize();
+    await window.electronAPI.dialogSaveFile(ser);
+  });
+
+  // Button: Load
+  const loadBtn = document.getElementById('loadBtn');
+  loadBtn.addEventListener('click', async () => {
+    const file = await window.electronAPI.dialogOpenFile();
+    if (file) {
+
+      graph.clear();
+      graph.configure(file);
+    }
+  });
 }
 
 runApp();
