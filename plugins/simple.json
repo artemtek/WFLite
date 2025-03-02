@@ -1,0 +1,85 @@
+{
+  "id": "simple-converter-plugin",
+  "name": "Simple File Converter",
+  "description": "Converts a file from one format to another using a Docker-based converter.",
+  "version": "1.0",
+  "inputs": [
+    {
+      "id": "inputText",
+      "name": "Input Text"
+    },
+    {
+      "id": "inputDir",
+      "name": "Input Directory",
+      "type": "directory",
+      "description": "Select the directory to convert."
+    },
+    {
+      "id": "showAdvanced1",
+      "name": "Show Advanced Controls 1",
+      "type": "boolean",
+      "default": false,
+      "description": "Toggle to show or hide advanced controls."
+    },
+    {
+      "id": "showAdvanced2",
+      "name": "Show Advanced Controls 2",
+      "type": "boolean",
+      "default": false,
+      "description": "Toggle to show or hide advanced controls."
+    },
+    {
+      "id": "text",
+      "name": "Example Text",
+      "type": "text",
+      "default": "Hello World",
+      "description": "This is an example text input."
+    },
+    {
+      "id": "multiline",
+      "name": "Example Multiline Text",
+      "type": "text",
+      "default": "Hello World",
+      "description": "This is an example multiline text input.",
+      "ui": {
+        "control": "text",
+        "multiline": true,
+        "visibleWhen": "showAdvanced1 === true && showAdvanced2 === true"
+      }
+    },
+    {
+      "id": "number",
+      "name": "Example Number",
+      "type": "number",
+      "default": 100,
+      "description": "This is an example number input."
+    },
+    {
+      "id": "boolean",
+      "name": "Example Boolean",
+      "type": "boolean",
+      "default": true,
+      "description": "This is an example boolean input."
+    },
+    {
+      "id": "conversionType",
+      "name": "Conversion Type",
+      "type": "string",
+      "default": "txt-to-pdf",
+      "description": "Select the type of conversion to perform.",
+      "ui": {
+        "control": "combo",
+        "options": [ "txt-to-pdf", "csv-to-json" ]
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "id": "outputDir",
+      "name": "Output Directory",
+      "type": "directory",
+      "description": "The converted directory."
+    }
+  ],
+  "command": "docker run --rm simple_converter:latest --input {inputFile} --conversion {conversionType} --output {outputFile}"
+}

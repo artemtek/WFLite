@@ -4,10 +4,29 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 
 # Features
 - [x] integrate LiteGraph.js
-- [ ] feedback from backend execution to frontend
+- [x] feedback from backend execution to frontend
+- [x] add nodes/plugins
+
+- [x] define custom plugin format to have "run command" and "ui config" for LiteGraph.js
+- [x] add LITE plugin
+
+- [x] write simple parser LITE -> LiteGraph.js
+- [x] add types: number, string, boolean
+- [x] add types: directory
+- [x] add conditional inputs within nodes
+
+
+- [ ] add example ICT plugin
+- [ ] write parser ICT -> LiteGraph.js
+- [ ] add example WIPP plugin
+- [ ] write parser WIPP -> LiteGraph.js
+
+- [ ] compile graph to steps logic
+- [ ] run steps logic
+
+- [ ] remove nodes that can't be used in the UI
 - [ ] ability to store imported plugins somewhere (local or db?)
 - [ ] save and load graph state to/from file
-- [ ] define custom plugin format to have "run command" and "ui config" for LiteGraph.js
 - [ ] create plugins registry somewhere, or ship it with the app
 - [ ] support ICT, WIPP, and custom format plugins
 - [ ] export to CWL, WIC, Argo and other workflow formats

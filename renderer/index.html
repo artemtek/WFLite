@@ -9,7 +9,11 @@
 </head>
 
 <body>
+  <!-- button to dynamically add a node type -->
+  <button id="addNodeBtn" class="add-node-button">Add Node</button>
+
   <button id="executeBtn" class="execute-button">Execute Command</button>
+  <!-- <button id="compileBtn" class="compile-button">Compile Graph</button> -->
   <div class="graph-container">
     <canvas id="mycanvas"></canvas>
   </div>
@@ -19,8 +23,9 @@
   </div>
 
   <script src="../node_modules/litegraph.js/build/litegraph.js"></script>
-  <script src="../nodes/index.js"></script>
-  <script src="script.js"></script>
+  <script src="../renderer/scripts/lite-to-lg.js"></script>
+  <script src="../nodes/nodes.js"></script>
+  <script src="app.js"></script>
 </body>
 
 </html>

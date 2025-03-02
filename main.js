@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 let mainWindow;
 
@@ -63,6 +64,13 @@ ipcMain.handle('execute-command', async (event, command) => {
       });
     });
   });
+});
+
+// Handle load plugins from plugins folder
+ipcMain.handle('load-plugins', async (event) => {
+  const plugins = fs.readdirSync(path.join(__dirname, 'plugins'));
+  const parsedPlugins = plugins.map(plugin => JSON.parse(fs.readFileSync(path.join(__dirname, 'plugins', plugin), 'utf8')));
+  return parsedPlugins;
 });
 
 // Called when Electron is ready
