@@ -17,27 +17,22 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [x] save and load graph state to/from file
 
 - [ ] allow docker image id instead of command, and build command dynamically including volumes
+- [ ] compile graph to steps logic
+- [ ] run steps logic
 
-- [ ] add run button to execute the graph
 
 - [ ] add example ICT plugin
 - [ ] write parser ICT -> LiteGraph.js
 - [ ] add example WIPP plugin
 - [ ] write parser WIPP -> LiteGraph.js
 
-- [ ] compile graph to steps logic
-- [ ] run steps logic
 
-- [ ] remove nodes that can't be used in the UI
+- [ ] get rid of LiteGraph nodes and use only custom nodes and imported
+- [ ] get rid of LiteGraph functionality that is not needed
+
+
 - [ ] store imported plugins somewhere (local or db?)
-- [ ] create plugins registry somewhere, or ship it with the app
-- [ ] support ICT, WIPP, and custom format plugins
+- [ ] internal plugins registry
+- [ ] create public plugins registry somewhere, or ship it with the app
+
 - [ ] export to CWL, WIC, Argo and other workflow formats
-
-
-
-
-
-
-
-
