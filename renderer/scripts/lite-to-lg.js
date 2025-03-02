@@ -38,14 +38,14 @@ export function createLiteGraphNodeFromJSON(json) {
             // add to properties
             this.properties["command"] = json.command;
 
-            // Process outputs.
+            // Process outputs
             if (json.outputs) {
                 json.outputs.forEach((output) => {
                     this.addOutput(output.name, output.type);
                 });
             }
 
-            // Process inputs.
+            // Process inputs
             if (json.inputs) {
 
                 // convert expressions to functions here once
@@ -54,10 +54,10 @@ export function createLiteGraphNodeFromJSON(json) {
 
                 json.inputs.forEach((input) => {
 
-                    // add to properties
+                    // add input to properties
                     this.properties[input.id] = input.default || "";
 
-                    // if input is directory, add input so we can connect to
+                    // if input is a directory, add input so we can connect to
                     // other nodes that output directories
                     if (input.type === "directory") {
                         this.addInput(input.name, input.type);
@@ -69,7 +69,6 @@ export function createLiteGraphNodeFromJSON(json) {
                     // if no UI is specified, create one from the type
                     if (!ui) {
                         switch (input.type) {
-
                             case "number":
                                 ui = { control: "number" };
                                 break;
@@ -86,8 +85,7 @@ export function createLiteGraphNodeFromJSON(json) {
                         }
                     }
 
-
-                    // add a corresponding widget.
+                    // add a corresponding widget
                     let widget;
                     switch (ui.control) {
                         case "text":
@@ -121,9 +119,8 @@ export function createLiteGraphNodeFromJSON(json) {
                             break;
                     }
 
-                    // if widget ui has a visibleWhen property, we need to check it on each change
+                    // if widget ui has a visibleWhen property, we need to track it
                     if (ui.visibleWhen) {
-                        console.log("visibleWhen", ui.visibleWhen);
                         visibleWhenExpressions.set(input.id, ui.visibleWhen);
                     }
 
@@ -134,7 +131,7 @@ export function createLiteGraphNodeFromJSON(json) {
                     const callback = widget.callback;
                     widget.callback = (v) => {
                         callback(v);
-                        this.runChecks();
+                        this.checkVisibility();
                     };
                 });
 
@@ -151,7 +148,7 @@ export function createLiteGraphNodeFromJSON(json) {
         /**
          * @description run the checks for the visibleWhen expressions
          */
-        runChecks() {
+        checkVisibility() {
             const properties = this.properties;
             this.visibleWhenFunctions.forEach((func, key) => {
 
@@ -166,7 +163,6 @@ export function createLiteGraphNodeFromJSON(json) {
                 if (result) {
                     this.removeWidget(key);
                 } else {
-                    // this.addWidget(key);
                     // add widget back at same index
                     const stash = this.widgetStash.get(key);
                     if (stash) {
