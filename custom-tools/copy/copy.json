@@ -1,0 +1,34 @@
+{
+  "id": "artemtek-copy",
+  "name": "Artemtek Copy",
+  "description": "Copies all files and directories from Input Directory to Output Directory.",
+  "version": "1.0.0",
+  "inputs": [
+    {
+      "id": "inputDir",
+      "name": "Input Directory",
+      "type": "directory",
+      "description": "The source directory containing files to copy.",
+      "required": true
+    }
+  ],
+  "outputs": [
+    {
+      "id": "outputDir",
+      "name": "Output Directory",
+      "type": "directory",
+      "description": "The destination directory where files will be copied."
+    }
+  ],
+  "command": {
+    "program": "docker",
+    "args": [
+      "run",
+      "--rm",
+      "artemtek/copy:latest",
+      "/input/inputDir",
+      "/output"
+    ]
+  }
+}
+
