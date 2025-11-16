@@ -65,13 +65,25 @@ async function runApp() {
   // Handle window resizing
   window.addEventListener('resize', resizeCanvas);
 
-  // Example logging function
-  function log(message) {
+  // Logging function with color support
+  function log(message, type = 'info') {
     const logArea = document.getElementById('log');
-    logArea.value += `\n${message}\n>`;
+    const colorClass = type === 'error' ? 'error' : 
+                      type === 'success' ? 'success' : 
+                      type === 'warning' ? 'warning' : 'info';
+    
+    // Escape HTML to prevent XSS
+    const escapedMessage = message
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    
+    const coloredMessage = `<span class="${colorClass}">${escapedMessage}</span>`;
+    logArea.innerHTML += `\n${coloredMessage}\n>`;
     logArea.scrollTop = logArea.scrollHeight;
   }
 
+  
   // Button: Execute command
   const executeBtn = document.getElementById('executeBtn');
   executeBtn.addEventListener('click', async () => {
@@ -89,24 +101,37 @@ async function runApp() {
   
 
     try {
+      log('=== Starting Workflow Execution ===');
       const result = await window.electronAPI.executeWorkflow(serializedGraph);
-      log(result.summary || 'Workflow execution completed');
+      
       if (result.executionDir) {
         log(`Execution directory: ${result.executionDir}`);
       }
+      
       if (result.results && result.results.length > 0) {
         result.results.forEach(nodeResult => {
-          log(`Node ${nodeResult.nodeId}: ${nodeResult.success ? 'Success' : 'Failed'}`);
+          log(`\n--- Node ${nodeResult.nodeId} (${nodeResult.nodeType || 'unknown'}) ---`);
+          if (nodeResult.command) {
+            log(`Command: ${nodeResult.command}`, 'info');
+          }
+          log(`Status: ${nodeResult.success ? '✓ Success' : '✗ Failed'}`, nodeResult.success ? 'success' : 'error');
           if (nodeResult.outputDir) {
-            log(`  Output: ${nodeResult.outputDir}`);
+            log(`Output directory: ${nodeResult.outputDir}`);
+          }
+          if (nodeResult.output) {
+            log(`Output:\n${nodeResult.output}`, nodeResult.success ? 'info' : 'error');
           }
         });
       }
+      
       if (result.errors && result.errors.length > 0) {
-        result.errors.forEach(error => log(`Error: ${error}`));
+        log('\n=== Errors ===', 'error');
+        result.errors.forEach(error => log(`✗ ${error}`, 'error'));
       }
+      
+      log(`\n=== ${result.summary || 'Workflow execution completed'} ===`, result.success !== false ? 'success' : 'info');
     } catch (error) {
-      log(`Error: ${error.message}`);
+      log(`✗ Error: ${error.message}`, 'error');
     }
   });
 

@@ -35,6 +35,25 @@ body {
   border: none;
   resize: none;
   outline: none;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#log .error {
+  color: #e06c75;
+}
+
+#log .success {
+  color: #98c379;
+}
+
+#log .info {
+  color: #61afef;
+}
+
+#log .warning {
+  color: #e5c07b;
 }
 
 .top-buttons {

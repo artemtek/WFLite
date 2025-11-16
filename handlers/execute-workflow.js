@@ -110,6 +110,9 @@ export const executeWorkflowHandler = async (event, workflow) => {
                 // Build Docker command
                 const { program, args, outputDir } = buildDockerCommand(node, inputs, execDir, pluginDef);
 
+                // Format command for logging
+                const commandString = `${program} ${args.join(' ')}`;
+
                 // Execute command
                 const result = await executeCommand(program, args, execDir);
                 results.push({
@@ -117,7 +120,8 @@ export const executeWorkflowHandler = async (event, workflow) => {
                     nodeType: node.type,
                     success: result.success,
                     output: result.output,
-                    outputDir: outputDir
+                    outputDir: outputDir,
+                    command: commandString
                 });
 
                 if (!result.success) {
