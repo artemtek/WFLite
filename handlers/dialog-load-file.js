@@ -1,8 +1,9 @@
-import { dialog } from 'electron';
+import { dialog, BrowserWindow } from 'electron';
 import fs from 'fs';
 
-export const dialogLoadFileHandler = async () => {
-    const { canceled, filePaths } = await dialog.showOpenDialog({
+export const dialogLoadFileHandler = async (event) => {
+    const mainWindow = BrowserWindow.fromWebContents(event.sender);
+    const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
         properties: ['openFile'],
         filters: [
             { name: 'JSON', extensions: ['json'] }
@@ -12,15 +13,16 @@ export const dialogLoadFileHandler = async () => {
         return null;
     } else {
         const filePath = filePaths[0];
-        // Read file contents (adjust encoding as needed)
+        // Read file contents
         const data = fs.readFileSync(filePath, 'utf8');
 
         // try to parse the data as json
         try {
             return JSON.parse(data);
         } catch (e) {
-            // throw error, show alert
-            dialog.showMessageBox({
+            // show error dialog
+            dialog.showMessageBox(mainWindow, {
+                type: 'error',
                 title: 'Error',
                 message: 'Failed to parse the file as JSON',
                 detail: e.message

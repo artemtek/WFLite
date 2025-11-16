@@ -140,20 +140,37 @@ async function runApp() {
   // Button: Save
   const saveBtn = document.getElementById('saveBtn');
   saveBtn.addEventListener('click', async () => {
-    const ser = graph.serialize();
-    await window.electronAPI.dialogSaveFile(ser);
+    try {
+      const serializedGraph = graph.serialize();
+      const filePath = await window.electronAPI.dialogSaveFile(serializedGraph);
+      if (filePath) {
+        log(`Workflow saved to: ${filePath}`, 'success');
+      }
+    } catch (error) {
+      log(`Error saving workflow: ${error.message}`, 'error');
+    }
   });
-
-
 
   // Button: Load
   const loadBtn = document.getElementById('loadBtn');
   loadBtn.addEventListener('click', async () => {
-    const file = await window.electronAPI.dialogOpenFile();
-    if (file) {
-
-      graph.clear();
-      graph.configure(file);
+    try {
+      const workflowData = await window.electronAPI.dialogOpenFile();
+      if (workflowData) {
+        // Clear current graph
+        graph.clear();
+        
+        // Configure graph with loaded data
+        graph.configure(workflowData);
+        
+        // Refresh canvas
+        canvas.setDirty(true);
+        
+        log(`Workflow loaded successfully`, 'success');
+        log(`Nodes: ${workflowData.nodes?.length || 0}, Links: ${workflowData.links?.length || 0}`, 'info');
+      }
+    } catch (error) {
+      log(`Error loading workflow: ${error.message}`, 'error');
     }
   });
 
