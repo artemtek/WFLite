@@ -15,9 +15,11 @@ let mainWindow;
 
 // Function to create the browser window.
 function createWindow() {
+  // Prevent window from stealing focus on nodemon restarts
   mainWindow = new BrowserWindow({
     width: 2000,
     height: 1200,
+    show: false,  // Don't show initially to prevent focus stealing
     webPreferences: {
       nodeIntegration: true,  // For accessing Node.js APIs in the renderer (be cautious with security)
       contextIsolation: true,
@@ -30,6 +32,11 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   mainWindow.webContents.openDevTools();
+
+  // Show window without stealing focus when ready
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.showInactive();  // Shows window without giving it focus
+  });
 
   mainWindow.on('closed', function () {
     mainWindow = null;

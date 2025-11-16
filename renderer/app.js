@@ -3,6 +3,22 @@ import { getSequence, simplifyGraph } from "./scripts/compile-graph.js";
 
 async function runApp() {
 
+  // Clear ALL OEM/default node types by replacing the registry
+  // Keep only custom nodes (plugin/* and specific input/* nodes we want)
+  if (LiteGraph.registered_node_types) {
+    const customNodes = {};
+    const allowedInputNodes = ['input/folder_picker']; // Only keep these input nodes
+    Object.keys(LiteGraph.registered_node_types).forEach(nodeTypeName => {
+      if (nodeTypeName.startsWith('plugin/')) {
+        customNodes[nodeTypeName] = LiteGraph.registered_node_types[nodeTypeName];
+      } else if (allowedInputNodes.includes(nodeTypeName)) {
+        customNodes[nodeTypeName] = LiteGraph.registered_node_types[nodeTypeName];
+      }
+      // Explicitly exclude Gamepad and other default nodes
+    });
+    LiteGraph.registered_node_types = customNodes;
+  }
+
   // Load and register node types
   const plugins = await window.electronAPI.loadPlugins();
   plugins.forEach(plugin => {
