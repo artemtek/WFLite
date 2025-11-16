@@ -30,16 +30,17 @@ async function runApp() {
   const graph = new LGraph();
   const canvas = new LGraphCanvas("#mycanvas", graph);
 
-  // Create another temp node for dev
-  const node1 = LiteGraph.createNode('plugin/simple-converter-plugin');
-  node1.pos = [100, 100];
-  graph.add(node1);
+  // Create startup workflow: Folder Picker -> Copy Plugin
+  const folderPicker = LiteGraph.createNode('input/folder_picker');
+  folderPicker.pos = [100, 100];
+  graph.add(folderPicker);
 
-  const node2 = LiteGraph.createNode('plugin/simple-converter-plugin');
-  node2.pos = [500, 100];
-  graph.add(node2);
+  const copyPlugin = LiteGraph.createNode('plugin/artemtek-copy');
+  copyPlugin.pos = [400, 100];
+  graph.add(copyPlugin);
 
-  node1.connect(0, node2, 0);
+  // Connect Folder Picker output to Copy Plugin input directory
+  folderPicker.connect(0, copyPlugin, 0);
 
 
 
