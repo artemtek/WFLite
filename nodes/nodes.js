@@ -33,8 +33,8 @@ class FolderPickerNode {
     desc = "Select a folder from the user's machine.";
 
     constructor() {
-        // Create an output port named "Folder" of type "string".
-        this.addOutput("Folder", "string");
+        // Create an output port named "Folder" of type "directory" to connect with directory inputs.
+        this.addOutput("Folder", "directory");
 
         // Default property for the selected folder (full path).
         this.properties = { folder: "" };
@@ -88,10 +88,10 @@ class FolderPickerNode {
         this.folderLabelWidget = this.addWidget("text", "Current Folder", this.properties.folder, () => { }, { disabled: true });
     }
 
-    // onExecute() {
-    // Output the selected folder (full path) on every execution cycle.
-    // this.setOutputData(0, this.properties.folder);
-    // }
+    onExecute() {
+        // Output the selected folder (full path) on every execution cycle.
+        this.setOutputData(0, this.properties.folder);
+    }
 }
 
 LiteGraph.registerNodeType("input/folder_picker", FolderPickerNode);
