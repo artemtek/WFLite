@@ -81,5 +81,18 @@
       "description": "The converted directory."
     }
   ],
-  "command": "docker run --rm simple_converter:latest --input {inputFile} --conversion {conversionType} --output {outputFile}"
+  "command": {
+    "program": "docker",
+    "args": [
+      "run",
+      "--rm",
+      "simple_converter:latest",
+      "--input",
+      "{inputFile}",
+      "--conversion",
+      "{conversionType}",
+      "--output",
+      "{outputFile}"
+    ]
+  }
 }

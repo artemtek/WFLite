@@ -3,7 +3,7 @@
  * @param {Object} json
  * @returns {LiteGraph.Node}
  */
-export function createLiteGraphNodeFromJSON(json) {
+export function lite2lg(json) {
 
     /**
      * @description Custom node class for LiteGraph.js
@@ -30,13 +30,8 @@ export function createLiteGraphNodeFromJSON(json) {
 
         constructor() {
 
-            // Store the command template if provided.
-            if (json.command) {
-                this.command = json.command;
-            }
-
             // add to properties
-            this.properties["command"] = json.command;
+            this.properties["_command"] = json.command;
 
             // Process outputs
             if (json.outputs) {
@@ -116,6 +111,7 @@ export function createLiteGraphNodeFromJSON(json) {
                             }, { min: ui.min || 0, max: ui.max || 1 });
                             break;
                         default:
+                            console.log('nothing found')
                             break;
                     }
 
@@ -196,11 +192,9 @@ export function createLiteGraphNodeFromJSON(json) {
 
     }
 
-    // Set the title and description of the node.
+    // Set properties
     CustomNode.title = json.name;
     CustomNode.desc = json.description;
-
-    // Register the node type using the provided ID.
-    LiteGraph.registerNodeType("plugin/" + json.id, CustomNode);
-    console.log("Registered node type:", "plugin/" + json.id);
+    CustomNode.id = json.id;
+    return CustomNode;
 }

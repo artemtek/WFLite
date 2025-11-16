@@ -65,5 +65,22 @@
             "description": "Folder containing processing logs and reports."
         }
     ],
-    "command": "docker run --rm image_processing_plugin:latest --input {inputFolder} --threshold {threshold} --advanced {advancedParameter} --output {processedFolder} --logs {logsFolder}"
+    "command": {
+        "program": "docker",
+        "args": [
+            "run",
+            "--rm",
+            "image_processing_plugin:latest",
+            "--input",
+            "{inputFolder}",
+            "--threshold",
+            "{threshold}",
+            "--advanced",
+            "{advancedParameter}",
+            "--output",
+            "{processedFolder}",
+            "--logs",
+            "{logsFolder}"
+        ]
+    }
 }

@@ -8,7 +8,7 @@ This is a workflow editor app. It will contain LiteGraph.js for UI and spawn com
 
 ### Prerequisites
 
-- Node.js 22.x
+- Node.js 24.x
 - npm 10.x
 
 ### Installation

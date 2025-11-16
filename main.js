@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import {
   loadPluginsHandler,
-  executeCommandHandler,
+  executeWorkflowHandler,
   dialogSaveFileHandler,
   dialogLoadFileHandler,
 } from './handlers/index.js';
@@ -37,7 +37,7 @@ function createWindow() {
 }
 
 // Handle IPC requests
-ipcMain.handle('execute-command', executeCommandHandler);
+ipcMain.handle('execute-workflow', executeWorkflowHandler);
 ipcMain.handle('load-plugins', loadPluginsHandler);
 ipcMain.handle('dialog-open-file', dialogLoadFileHandler);
 ipcMain.handle('dialog-save-file', dialogSaveFileHandler);
