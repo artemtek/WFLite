@@ -152,25 +152,42 @@ export function buildDockerCommand(node, inputs, execDir, pluginDef) {
     // Build command args with placeholder replacement
     const commandArgs = (pluginDef.command?.args || []).slice(imageIndex + 1);
     
+    // Create a map of input IDs to container paths for replacement
+    const inputPathMap = {};
+    Object.entries(inputs).forEach(([inputIndex, inputPath]) => {
+        const inputDef = pluginDef.inputs?.[parseInt(inputIndex)];
+        if (inputDef) {
+            inputPathMap[inputDef.id] = `/input/${inputDef.id}`;
+        }
+    });
+    
     const resolvedArgs = commandArgs.map(arg => {
         let resolved = String(arg);
         
-        // Replace input placeholders
-        Object.entries(inputs).forEach(([inputIndex, inputPath]) => {
-            const inputDef = pluginDef.inputs?.find((inp, idx) => idx === parseInt(inputIndex));
-            if (inputDef) {
-                const placeholder = `{${inputDef.id}}`;
-                const containerPath = `/input/${inputDef.id}`;
-                resolved = resolved.replace(placeholder, containerPath);
+        // Replace input placeholders like {inputDir} or hardcoded paths like /input/inputDir
+        Object.entries(inputPathMap).forEach(([inputId, containerPath]) => {
+            // Replace placeholder format: {inputId}
+            const placeholder = `{${inputId}}`;
+            resolved = resolved.replace(placeholder, containerPath);
+            
+            // Replace hardcoded path format: /input/inputId
+            const hardcodedPath = `/input/${inputId}`;
+            if (resolved === hardcodedPath) {
+                resolved = containerPath;
             }
         });
         
-        // Replace output placeholders
+        // Replace output placeholders like {outputDir} or hardcoded /output
         if (pluginDef.outputs) {
             pluginDef.outputs.forEach(output => {
                 const placeholder = `{${output.id}}`;
                 resolved = resolved.replace(placeholder, '/output');
             });
+        }
+        
+        // Replace hardcoded /output path (if it's the exact arg)
+        if (resolved === '/output') {
+            resolved = '/output'; // Keep as is, it's correct
         }
         
         // Replace property placeholders

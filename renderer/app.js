@@ -86,19 +86,25 @@ async function runApp() {
 
     const sequnecedGraph = sequnecedGraphIds.map(id => serializedGraph.nodes.find(node => node.id === id));
     console.log('sequnecedGraph', sequnecedGraph);
-    
-
-
-
-
-
-
-
+  
 
     try {
       const result = await window.electronAPI.executeWorkflow(serializedGraph);
-      log(`Executing: ${command}`);
-      log(result.output);
+      log(result.summary || 'Workflow execution completed');
+      if (result.executionDir) {
+        log(`Execution directory: ${result.executionDir}`);
+      }
+      if (result.results && result.results.length > 0) {
+        result.results.forEach(nodeResult => {
+          log(`Node ${nodeResult.nodeId}: ${nodeResult.success ? 'Success' : 'Failed'}`);
+          if (nodeResult.outputDir) {
+            log(`  Output: ${nodeResult.outputDir}`);
+          }
+        });
+      }
+      if (result.errors && result.errors.length > 0) {
+        result.errors.forEach(error => log(`Error: ${error}`));
+      }
     } catch (error) {
       log(`Error: ${error.message}`);
     }
