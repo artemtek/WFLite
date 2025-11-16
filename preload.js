@@ -5,4 +5,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     loadPlugins: () => ipcRenderer.invoke('load-plugins'),
     dialogOpenFile: () => ipcRenderer.invoke('dialog-open-file'),
     dialogSaveFile: () => ipcRenderer.invoke('dialog-save-file'),
+    dialogOpenFolder: () => ipcRenderer.invoke('dialog-open-folder'),
 }); 

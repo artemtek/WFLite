@@ -36,45 +36,60 @@ class FolderPickerNode {
         // Create an output port named "Folder" of type "string".
         this.addOutput("Folder", "string");
 
-        // Default property for the selected folder.
+        // Default property for the selected folder (full path).
         this.properties = { folder: "" };
 
-        // Create a hidden file input element that supports folder selection.
-        this.folderInput = document.createElement("input");
-        this.folderInput.type = "file";
-        this.folderInput.setAttribute("webkitdirectory", "true");
-        this.folderInput.style.display = "none";
-        document.body.appendChild(this.folderInput);
-
-        // Listen for when the user selects a folder.
-        this.folderInput.addEventListener("change", (e) => {
-            if (this.folderInput.files.length > 0) {
-                // Extract the folder name from the first file's webkitRelativePath.
-                const firstFile = this.folderInput.files[0];
-                const pathParts = firstFile.webkitRelativePath.split("/");
-                this.properties.folder = pathParts[0]; // Selected folder name.
-                // Update the label widget with the new folder name.
-                if (this.folderLabelWidget) {
-                    this.folderLabelWidget.value = this.properties.folder;
-                }
-                // Optionally trigger a node update.
-                this.setDirtyCanvas(true);
-            }
-        });
-
         // Add a widget button that displays "Choose Folder" on the node.
-        // When clicked, it triggers the hidden file input's click event.
+        // When clicked, it opens Electron's folder picker dialog to get the full path.
         this.addWidget("button", "Choose Folder", "", () => {
-            this.folderInput.click();
+            console.log("Choose Folder button clicked");
+            
+            if (!window.electronAPI) {
+                console.error("window.electronAPI is not available");
+                return;
+            }
+            
+            if (!window.electronAPI.dialogOpenFolder) {
+                console.error("dialogOpenFolder is not available on electronAPI");
+                console.log("Available methods:", Object.keys(window.electronAPI));
+                return;
+            }
+            
+            // Wrap async call in promise handling
+            window.electronAPI.dialogOpenFolder()
+                .then((folderPath) => {
+                    console.log("Dialog returned:", folderPath);
+                    if (folderPath) {
+                        this.properties.folder = folderPath;
+                        
+                        // Log the selected folder full path
+                        console.log("Folder Picker - Selected folder (full path):", this.properties.folder);
+                        
+                        // Update the label widget with the folder path.
+                        if (this.folderLabelWidget) {
+                            // Show just the folder name or last part of path for display
+                            const pathParts = folderPath.split(/[/\\]/);
+                            const displayName = pathParts[pathParts.length - 1] || folderPath;
+                            this.folderLabelWidget.value = displayName;
+                        }
+                        // Trigger a node update.
+                        this.setDirtyCanvas(true);
+                    } else {
+                        console.log("No folder selected (user cancelled)");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error opening folder dialog:", error);
+                });
         });
 
         // Add a read-only text widget to display the current folder selection.
-        // This acts as a label.
+        // This acts as a label showing the folder name.
         this.folderLabelWidget = this.addWidget("text", "Current Folder", this.properties.folder, () => { }, { disabled: true });
     }
 
     // onExecute() {
-    // Output the selected folder (name) on every execution cycle.
+    // Output the selected folder (full path) on every execution cycle.
     // this.setOutputData(0, this.properties.folder);
     // }
 }
