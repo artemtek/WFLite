@@ -1,0 +1,46 @@
+{
+  "id": "artemtek-downscale-image",
+  "name": "Downscale Image",
+  "description": "Downscales images in the input directory by a specified factor.",
+  "version": "1.0.0",
+  "inputs": [
+    {
+      "id": "inputDir",
+      "name": "Input Directory",
+      "type": "directory",
+      "description": "Directory containing images to downscale (PNG, JPG, TIFF, BMP, GIF, WEBP).",
+      "required": true
+    },
+    {
+      "id": "scaleFactor",
+      "name": "Scale Factor",
+      "type": "number",
+      "description": "Factor by which to downscale images (e.g., 2.0 for 1/2x downscale).",
+      "required": true,
+      "default": 2.0,
+      "ui": {
+        "control": "number"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "id": "outputDir",
+      "name": "Output Directory",
+      "type": "directory",
+      "description": "Directory where downscaled images will be saved."
+    }
+  ],
+  "command": {
+    "program": "docker",
+    "args": [
+      "run",
+      "--rm",
+      "artemtek/downscale-image:latest",
+      "/input/inputDir",
+      "/output",
+      "{scaleFactor}"
+    ]
+  }
+}
+
