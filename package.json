@@ -5,8 +5,17 @@
   "main": "main.js",
   "scripts": {
     "start": "nodemon --quiet --watch main.js --watch preload.cjs --watch renderer --ext js,html,css --exec \"electron --no-focus .\"",
-    "build": "electron-builder",
-    "pack": "electron-builder --dir"
+    "build": "node scripts/package.js",
+    "build:mac": "node scripts/package.js --mac",
+    "build:win": "node scripts/package.js --win",
+    "build:linux": "node scripts/package.js --linux",
+    "build:all": "node scripts/package.js --mac --win --linux",
+    "pack": "electron-builder --dir",
+    "pack:mac": "electron-builder --mac --dir",
+    "pack:win": "electron-builder --win --dir",
+    "pack:linux": "electron-builder --linux --dir",
+    "clean": "rm -rf dist",
+    "package": "npm run clean && npm run build"
   },
   "build": {
     "appId": "com.lite.app",
@@ -18,21 +27,25 @@
       "main.js",
       "preload.cjs",
       "renderer/**/*",
+      "handlers/**/*",
+      "plugins/**/*",
+      "nodes/**/*",
+      "icons/**/*",
       "node_modules/**/*"
     ],
     "publish": null,
-    "icon": "icons/favicon-256x256.png",
+    "icon": "build/icon-512.png",
     "mac": {
       "category": "public.app-category.developer-tools",
-      "icon": "icons/favicon-256x256.png"
+      "icon": "build/icon.icns"
     },
     "win": {
       "target": "nsis",
-      "icon": "icons/favicon.ico"
+      "icon": "build/icon.ico"
     },
     "linux": {
       "target": "AppImage",
-      "icon": "icons/favicon-256x256.png"
+      "icon": "build/icon-512.png"
     }
   },
   "keywords": [],
