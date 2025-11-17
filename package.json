@@ -21,14 +21,18 @@
       "node_modules/**/*"
     ],
     "publish": null,
+    "icon": "icons/favicon-256x256.png",
     "mac": {
-      "category": "public.app-category.developer-tools"
+      "category": "public.app-category.developer-tools",
+      "icon": "icons/favicon-256x256.png"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "icon": "icons/favicon.ico"
     },
     "linux": {
-      "target": "AppImage"
+      "target": "AppImage",
+      "icon": "icons/favicon-256x256.png"
     }
   },
   "keywords": [],

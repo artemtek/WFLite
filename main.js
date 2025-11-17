@@ -28,6 +28,7 @@ function createWindow() {
     width: 2000,
     height: 1200,
     show: false,  // Don't show initially to prevent focus stealing
+    icon: path.join(__dirname, 'icons', 'favicon-256x256.png'),
     webPreferences: {
       nodeIntegration: true,  // For accessing Node.js APIs in the renderer (be cautious with security)
       contextIsolation: true,
