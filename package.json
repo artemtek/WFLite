@@ -16,7 +16,7 @@
     },
     "files": [
       "main.js",
-      "preload.js",
+      "preload.cjs",
       "renderer/**/*",
       "node_modules/**/*"
     ],
