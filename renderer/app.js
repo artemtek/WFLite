@@ -40,6 +40,30 @@ async function runApp() {
   // Make reloadPlugins available globally
   window.reloadPlugins = reloadPlugins;
 
+  // Globally remove "Mode", "Properties", and "Resize" options from context menu
+  // Override getNodeMenuOptions on LGraphCanvas prototype
+  const originalGetNodeMenuOptions = LGraphCanvas.prototype.getNodeMenuOptions;
+  LGraphCanvas.prototype.getNodeMenuOptions = function(node) {
+    // Call the original method to get the default options
+    const options = originalGetNodeMenuOptions ? originalGetNodeMenuOptions.call(this, node) : [];
+    
+    // Options to remove
+    const optionsToRemove = ['Mode', 'Properties', 'Resize'];
+    
+    // Filter out the unwanted options
+    return options.filter(option => {
+      if (typeof option === 'string') {
+        return !optionsToRemove.includes(option);
+      }
+      if (option && typeof option === 'object') {
+        // Handle object options - check various possible properties
+        const optionValue = option.content || option.text || option.title || option;
+        return !optionsToRemove.includes(optionValue);
+      }
+      return true;
+    });
+  };
+
   // Create graph and canvas
   const graph = new LGraph();
   const canvas = new LGraphCanvas("#mycanvas", graph);
