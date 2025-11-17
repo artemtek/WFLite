@@ -14,6 +14,9 @@ Suggested next features, prioritized by impact and user value:
 
 ## High priority — core UX
 
+0. **Storage strategy
+   - for worfklows
+
 1. **Plugin management UI**
    - Browse/install plugins from a registry
    - View installed plugins with details
