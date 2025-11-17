@@ -218,6 +218,164 @@ async function runApp() {
   // Make log function available globally for plugin management
   window.log = log;
 
+  // Add Node functionality
+  const addNodeBtn = document.getElementById('addNodeBtn');
+  const nodeMenu = document.getElementById('nodeMenu');
+  const nodeMenuList = document.getElementById('nodeMenuList');
+  const nodeSearchInput = document.getElementById('nodeSearchInput');
+  let allNodeTypes = [];
+
+  // Function to get all available node types
+  function getAvailableNodeTypes() {
+    const nodeTypes = [];
+    if (LiteGraph.registered_node_types) {
+      Object.keys(LiteGraph.registered_node_types).forEach(nodeType => {
+        const nodeClass = LiteGraph.registered_node_types[nodeType];
+        const title = nodeClass.title || nodeClass.name || nodeType;
+        const category = nodeType.startsWith('plugin/') ? 'Plugin' : 
+                        nodeType.startsWith('input/') ? 'Input' : 'Other';
+        nodeTypes.push({
+          type: nodeType,
+          title: title,
+          category: category
+        });
+      });
+    }
+    // Sort by category, then by title
+    return nodeTypes.sort((a, b) => {
+      if (a.category !== b.category) {
+        return a.category.localeCompare(b.category);
+      }
+      return a.title.localeCompare(b.title);
+    });
+  }
+
+  // Function to render node menu
+  function renderNodeMenu(filter = '') {
+    const filtered = filter.trim() === '' 
+      ? allNodeTypes 
+      : allNodeTypes.filter(node => 
+          node.title.toLowerCase().includes(filter.toLowerCase()) ||
+          node.type.toLowerCase().includes(filter.toLowerCase())
+        );
+
+    if (filtered.length === 0) {
+      nodeMenuList.innerHTML = '<div class="node-menu-item" style="color: #888; cursor: default;">No nodes found</div>';
+      return;
+    }
+
+    let currentCategory = '';
+    let html = '';
+    filtered.forEach(node => {
+      if (node.category !== currentCategory) {
+        if (currentCategory !== '') {
+          html += '</div>';
+        }
+        currentCategory = node.category;
+        html += `<div class="node-menu-item" style="color: #888; cursor: default; font-weight: bold;">${node.category}</div>`;
+      }
+      html += `
+        <div class="node-menu-item" data-node-type="${node.type}">
+          <div class="node-name">${node.title}</div>
+        </div>
+      `;
+    });
+    nodeMenuList.innerHTML = html;
+
+    // Add click handlers
+    nodeMenuList.querySelectorAll('.node-menu-item[data-node-type]').forEach(item => {
+      item.addEventListener('click', () => {
+        const nodeType = item.getAttribute('data-node-type');
+        addNodeToGraph(nodeType);
+        nodeMenu.style.display = 'none';
+        nodeSearchInput.value = '';
+      });
+    });
+  }
+
+  // Function to add node to graph
+  function addNodeToGraph(nodeType) {
+    try {
+      const node = LiteGraph.createNode(nodeType);
+      if (!node) {
+        log(`Failed to create node: ${nodeType}`, 'error');
+        return;
+      }
+
+      // Position node - use a simple approach
+      // Get existing nodes to find a good position, or use default center
+      let posX = 400;
+      let posY = 300;
+      
+      // If there are existing nodes, place new node near the last one
+      if (graph._nodes && graph._nodes.length > 0) {
+        const lastNode = graph._nodes[graph._nodes.length - 1];
+        if (lastNode && lastNode.pos && Array.isArray(lastNode.pos) && lastNode.pos.length >= 2) {
+          posX = lastNode.pos[0] + 250;
+          posY = lastNode.pos[1] + 50;
+        }
+      }
+      
+      // Add some random offset to avoid exact stacking
+      posX += (Math.random() - 0.5) * 100;
+      posY += (Math.random() - 0.5) * 100;
+      
+      // Set position before adding to graph
+      if (!node.pos) {
+        node.pos = [posX, posY];
+      } else {
+        node.pos[0] = posX;
+        node.pos[1] = posY;
+      }
+      
+      graph.add(node);
+      canvas.setDirty(true);
+      
+      log(`Added node: ${node.title || nodeType}`, 'success');
+    } catch (error) {
+      log(`Error adding node: ${error.message}`, 'error');
+      console.error('Full error:', error);
+    }
+  }
+
+  // Toggle node menu
+  addNodeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (nodeMenu.style.display === 'none') {
+      allNodeTypes = getAvailableNodeTypes();
+      renderNodeMenu();
+      nodeMenu.style.display = 'block';
+      nodeSearchInput.focus();
+    } else {
+      nodeMenu.style.display = 'none';
+      nodeSearchInput.value = '';
+    }
+  });
+
+  // Search filter
+  nodeSearchInput.addEventListener('input', (e) => {
+    renderNodeMenu(e.target.value);
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!addNodeBtn.contains(e.target) && !nodeMenu.contains(e.target)) {
+      nodeMenu.style.display = 'none';
+      nodeSearchInput.value = '';
+    }
+  });
+
+  // Close menu on Escape key
+  nodeSearchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      nodeMenu.style.display = 'none';
+      nodeSearchInput.value = '';
+    }
+  });
+
+  // Make graph and canvas available globally for node menu
+  window.graph = graph;
+  window.canvas = canvas;
 
 }
 

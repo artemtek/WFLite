@@ -10,11 +10,29 @@
 
 <body>
   <div class="top-buttons">
-    <button id="executeBtn" class="button">Start Workflow</button>
-    
-    <!-- save and load buttons -->
-    <button id="saveBtn" class="button">Save</button>
-    <button id="loadBtn" class="button">Load</button>
+    <!-- Node Management Group -->
+    <div class="button-group">
+      <div class="add-node-container">
+        <button id="addNodeBtn" class="button">Add Node</button>
+        <div id="nodeMenu" class="node-menu" style="display: none;">
+          <div class="node-menu-search">
+            <input type="text" id="nodeSearchInput" placeholder="Search nodes...">
+          </div>
+          <div id="nodeMenuList" class="node-menu-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workflow Group -->
+    <div class="button-group">
+      <button id="executeBtn" class="button">Start Workflow</button>
+    </div>
+
+    <!-- File Operations Group -->
+    <div class="button-group">
+      <button id="saveBtn" class="button">Save</button>
+      <button id="loadBtn" class="button">Load</button>
+    </div>
   </div>
   <div class="graph-container">
     <button id="pluginsBtn" class="button plugins-button">Manage Plugins</button>
