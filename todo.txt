@@ -17,9 +17,9 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [x] save and load graph state to/from file
 
 - [x] add example ICT plugin
-- [ ] write parser ICT -> LITE
+- [x] write parser ICT -> LITE
 - [x] add example WIPP plugin
-- [ ] write parser WIPP -> LITE
+- [x] write parser WIPP -> LITE
 
 - [ ] allow docker image id instead of command, and build command dynamically including volumes
 - [x] inline logic
