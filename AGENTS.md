@@ -51,6 +51,7 @@ The plugin JSON must also be copied to `plugins/{owner}-{plugin-name}.json` to r
       "description": "Output description"
     }
   ],
+  // Option 1: Specify full command (for custom command structure)
   "command": {
     "program": "docker",               // Usually "docker"
     "args": [                          // Command arguments
@@ -61,9 +62,16 @@ The plugin JSON must also be copied to `plugins/{owner}-{plugin-name}.json` to r
       "{inputId}",                     // Placeholder for input
       "/output"                        // Output path (or {outputId})
     ]
-  }
+  },
+  // Option 2: Specify only Docker image (command auto-generated)
+  "dockerImage": "owner/image:tag"     // Docker image - command will be auto-generated
 }
 ```
+
+**Note:** You can use either `command` or `dockerImage`. If `dockerImage` is specified, the command is automatically generated with:
+- Input directories as `/input/{inputId}` arguments (in order)
+- Output directory as `/output` argument
+- Node property values as additional arguments (excluding internal properties starting with `_`)
 
 ### Input Types
 

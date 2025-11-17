@@ -21,7 +21,7 @@ this is a workflow editor app. it will contain LiteGraph.js for UI and spawn com
 - [x] add example WIPP plugin
 - [x] write parser WIPP -> LITE
 
-- [ ] allow docker image id instead of command, and build command dynamically including volumes
+- [x] allow docker image id instead of command, and build command dynamically including volumes
 - [x] inline logic
 - [x] compile graph to steps logic
 - [x] run steps logic

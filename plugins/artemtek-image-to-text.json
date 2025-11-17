@@ -20,15 +20,6 @@
       "description": "Directory where text files will be saved (one .txt file per image)."
     }
   ],
-  "command": {
-    "program": "docker",
-    "args": [
-      "run",
-      "--rm",
-      "artemtek/image-to-text:latest",
-      "/input/inputDir",
-      "/output"
-    ]
-  }
+  "dockerImage": "artemtek/image-to-text:latest"
 }
 

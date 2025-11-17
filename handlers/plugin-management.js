@@ -114,23 +114,28 @@ export const validatePluginHandler = async (event, pluginData) => {
     
     // Required fields
     if (!pluginData.id) {
-        errors.push('Plugin must have an "id" field');
+      errors.push('Plugin must have an "id" field');
     }
     if (!pluginData.name) {
-        errors.push('Plugin must have a "name" field');
+      errors.push('Plugin must have a "name" field');
     }
-    if (!pluginData.command) {
-        errors.push('Plugin must have a "command" field');
+    if (!pluginData.command && !pluginData.dockerImage) {
+      errors.push('Plugin must have either a "command" field or a "dockerImage" field');
     }
     
-    // Validate command structure
+    // Validate command structure (if provided)
     if (pluginData.command) {
-        if (!pluginData.command.program) {
-            errors.push('Command must have a "program" field');
-        }
-        if (!pluginData.command.args || !Array.isArray(pluginData.command.args)) {
-            errors.push('Command must have an "args" array');
-        }
+      if (!pluginData.command.program) {
+        errors.push('Command must have a "program" field');
+      }
+      if (!pluginData.command.args || !Array.isArray(pluginData.command.args)) {
+        errors.push('Command must have an "args" array');
+      }
+    }
+    
+    // Validate dockerImage (if provided instead of command)
+    if (pluginData.dockerImage && typeof pluginData.dockerImage !== 'string') {
+      errors.push('dockerImage must be a string');
     }
     
     // Validate inputs

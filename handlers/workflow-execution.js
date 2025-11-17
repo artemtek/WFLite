@@ -141,65 +141,102 @@ export function buildDockerCommand(node, inputs, execDir, pluginDef) {
     // Mount output directory
     dockerArgs.push('-v', `${outputDir}:/output`);
     
-    // Add Docker image (assuming it's in the command args)
-    const imageIndex = pluginDef.command?.args?.findIndex(arg => 
-        arg.includes(':') || arg.includes('/')
-    ) || 2; // Default to index 2 if not found
+    // Determine Docker image and command args
+    let image;
+    let commandArgs = [];
     
-    const image = pluginDef.command?.args?.[imageIndex] || 'image:latest';
-    dockerArgs.push(image);
-    
-    // Build command args with placeholder replacement
-    const commandArgs = (pluginDef.command?.args || []).slice(imageIndex + 1);
-    
-    // Create a map of input IDs to container paths for replacement
-    const inputPathMap = {};
-    Object.entries(inputs).forEach(([inputIndex, inputPath]) => {
-        const inputDef = pluginDef.inputs?.[parseInt(inputIndex)];
-        if (inputDef) {
-            inputPathMap[inputDef.id] = `/input/${inputDef.id}`;
-        }
-    });
-    
-    const resolvedArgs = commandArgs.map(arg => {
-        let resolved = String(arg);
+    if (pluginDef.dockerImage) {
+        // Use dockerImage field - auto-generate command
+        image = pluginDef.dockerImage;
         
-        // Replace input placeholders like {inputDir} or hardcoded paths like /input/inputDir
-        Object.entries(inputPathMap).forEach(([inputId, containerPath]) => {
-            // Replace placeholder format: {inputId}
-            const placeholder = `{${inputId}}`;
-            resolved = resolved.replace(placeholder, containerPath);
-            
-            // Replace hardcoded path format: /input/inputId
-            const hardcodedPath = `/input/${inputId}`;
-            if (resolved === hardcodedPath) {
-                resolved = containerPath;
+        // Auto-generate args: input paths, then output path, then any additional args from properties
+        Object.entries(inputs).forEach(([inputIndex, inputPath]) => {
+            const inputDef = pluginDef.inputs?.[parseInt(inputIndex)];
+            if (inputDef) {
+                commandArgs.push(`/input/${inputDef.id}`);
             }
         });
         
-        // Replace output placeholders like {outputDir} or hardcoded /output
-        if (pluginDef.outputs) {
-            pluginDef.outputs.forEach(output => {
-                const placeholder = `{${output.id}}`;
-                resolved = resolved.replace(placeholder, '/output');
-            });
+        // Add output path
+        if (pluginDef.outputs && pluginDef.outputs.length > 0) {
+            commandArgs.push('/output');
         }
         
-        // Replace hardcoded /output path (if it's the exact arg)
-        if (resolved === '/output') {
-            resolved = '/output'; // Keep as is, it's correct
-        }
-        
-        // Replace property placeholders
+        // Add any property values as additional args
         Object.entries(node.properties || {}).forEach(([key, value]) => {
-            const placeholder = `{${key}}`;
-            resolved = resolved.replace(placeholder, String(value));
+            // Skip internal properties (those starting with _)
+            if (!key.startsWith('_') && value !== undefined && value !== null && value !== '') {
+                commandArgs.push(String(value));
+            }
+        });
+    } else if (pluginDef.command) {
+        // Use existing command structure
+        // Find Docker image in command args
+        const imageIndex = pluginDef.command.args?.findIndex(arg => 
+            arg.includes(':') || (arg.includes('/') && !arg.startsWith('/'))
+        ) ?? -1;
+        
+        if (imageIndex >= 0) {
+            image = pluginDef.command.args[imageIndex];
+            commandArgs = pluginDef.command.args.slice(imageIndex + 1);
+        } else {
+            // Fallback: try index 2 (after 'run', '--rm') if args exist
+            if (pluginDef.command.args && pluginDef.command.args.length > 2) {
+                image = pluginDef.command.args[2];
+                commandArgs = pluginDef.command.args.slice(3) || [];
+            } else {
+                throw new Error(`Could not determine Docker image from plugin command. Plugin: ${pluginDef.id || 'unknown'}`);
+            }
+        }
+        
+        // Create a map of input IDs to container paths for replacement
+        const inputPathMap = {};
+        Object.entries(inputs).forEach(([inputIndex, inputPath]) => {
+            const inputDef = pluginDef.inputs?.[parseInt(inputIndex)];
+            if (inputDef) {
+                inputPathMap[inputDef.id] = `/input/${inputDef.id}`;
+            }
         });
         
-        return resolved;
-    });
+        // Replace placeholders in command args
+        commandArgs = commandArgs.map(arg => {
+            let resolved = String(arg);
+            
+            // Replace input placeholders like {inputDir} or hardcoded paths like /input/inputDir
+            Object.entries(inputPathMap).forEach(([inputId, containerPath]) => {
+                // Replace placeholder format: {inputId}
+                const placeholder = `{${inputId}}`;
+                resolved = resolved.replace(placeholder, containerPath);
+                
+                // Replace hardcoded path format: /input/inputId
+                const hardcodedPath = `/input/${inputId}`;
+                if (resolved === hardcodedPath) {
+                    resolved = containerPath;
+                }
+            });
+            
+            // Replace output placeholders like {outputDir} or hardcoded /output
+            if (pluginDef.outputs) {
+                pluginDef.outputs.forEach(output => {
+                    const placeholder = `{${output.id}}`;
+                    resolved = resolved.replace(placeholder, '/output');
+                });
+            }
+            
+            // Replace property placeholders
+            Object.entries(node.properties || {}).forEach(([key, value]) => {
+                const placeholder = `{${key}}`;
+                resolved = resolved.replace(placeholder, String(value));
+            });
+            
+            return resolved;
+        });
+    } else {
+        throw new Error('Plugin must have either "command" or "dockerImage" field');
+    }
     
-    dockerArgs.push(...resolvedArgs);
+    dockerArgs.push(image);
+    dockerArgs.push(...commandArgs);
     
     return {
         program: pluginDef.command?.program || 'docker',

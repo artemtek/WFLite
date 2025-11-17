@@ -20,15 +20,6 @@
       "description": "The destination directory where files will be copied."
     }
   ],
-  "command": {
-    "program": "docker",
-    "args": [
-      "run",
-      "--rm",
-      "artemtek/copy:latest",
-      "/input/inputDir",
-      "/output"
-    ]
-  }
+  "dockerImage": "artemtek/copy:latest"
 }
 
