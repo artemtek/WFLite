@@ -26,9 +26,9 @@ Suggested next features, prioritized by impact and user value:
 
 2. **Node palette/search**
    <!-- - Right-click or sidebar to add nodes -->
-   - Search/filter available plugins
+   <!-- - Search/filter available plugins -->
    - Group by category
-   - Currently nodes are hardcoded in startup
+   <!-- - Currently nodes are hardcoded in startup -->
 
 3. **Workflow validation**
    - Validate before execution (required inputs, connection types, cycles)
