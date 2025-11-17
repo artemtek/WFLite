@@ -17,6 +17,7 @@
     <button id="loadBtn" class="button">Load</button>
   </div>
   <div class="graph-container">
+    <button id="pluginsBtn" class="button plugins-button">Plugins</button>
     <canvas id="mycanvas"></canvas>
   </div>
   <div class="log-container">
@@ -24,11 +25,63 @@
 ></pre>
   </div>
 
+  <!-- Plugin Management Modal -->
+  <div id="pluginModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Plugin Management</h2>
+        <button class="modal-close" id="pluginModalClose">&times;</button>
+      </div>
+      
+      <div class="modal-tabs">
+        <button class="tab-button active" data-tab="installed">Installed</button>
+        <button class="tab-button" data-tab="upload">Bulk Upload</button>
+        <button class="tab-button" data-tab="url">From URL</button>
+        <button class="tab-button" data-tab="editor">Text Editor</button>
+      </div>
+
+      <!-- Installed Plugins Tab -->
+      <div class="tab-content active" id="tab-installed">
+        <div class="plugins-list" id="pluginsList">
+          <p>Loading plugins...</p>
+        </div>
+        <button class="button" id="refreshPluginsBtn">Refresh</button>
+      </div>
+
+      <!-- Bulk Upload Tab -->
+      <div class="tab-content" id="tab-upload">
+        <div class="upload-area">
+          <input type="file" id="bulkUploadInput" multiple accept=".json,.yaml" style="display: none;">
+          <button class="button" id="selectFilesBtn">Select Files</button>
+          <div id="uploadedFilesList"></div>
+        </div>
+        <button class="button" id="processUploadBtn" disabled>Upload Selected Files</button>
+      </div>
+
+      <!-- From URL Tab -->
+      <div class="tab-content" id="tab-url">
+        <textarea id="urlListTextarea" placeholder="Enter URLs (one per line):&#10;https://example.com/plugin1.json&#10;https://example.com/plugin2.json" rows="10"></textarea>
+        <button class="button" id="fetchUrlsBtn">Fetch Plugins</button>
+        <div id="urlFetchResults"></div>
+      </div>
+
+      <!-- Text Editor Tab -->
+      <div class="tab-content" id="tab-editor">
+        <textarea id="pluginEditorTextarea" placeholder='Paste plugin JSON here...' rows="20"></textarea>
+        <div class="editor-actions">
+          <button class="button" id="validateEditorBtn">Validate</button>
+          <button class="button" id="saveEditorBtn" disabled>Save Plugin</button>
+        </div>
+        <div id="editorValidationResults"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- litegraph.js -->
   <script src="../node_modules/litegraph.js/build/litegraph.js"></script>
-
+  
   <!-- custom nodes -->
-  <script src="../nodes/nodes.js"></script>
+    <script src="../nodes/nodes.js"></script>
 
   <!-- app -->
   <script type="module" src="app.js"></script>

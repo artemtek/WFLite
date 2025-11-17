@@ -7,6 +7,13 @@ import {
   dialogSaveFileHandler,
   dialogLoadFileHandler,
   dialogOpenFolderHandler,
+  getPluginsHandler,
+  savePluginHandler,
+  deletePluginHandler,
+  validatePluginHandler,
+  fetchPluginFromUrlHandler,
+  bulkSavePluginsHandler,
+  bulkFetchPluginsHandler,
 } from './handlers/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -50,6 +57,14 @@ ipcMain.handle('load-plugins', loadPluginsHandler);
 ipcMain.handle('dialog-open-file', dialogLoadFileHandler);
 ipcMain.handle('dialog-save-file', dialogSaveFileHandler);
 ipcMain.handle('dialog-open-folder', dialogOpenFolderHandler);
+// Plugin management handlers
+ipcMain.handle('get-plugins', getPluginsHandler);
+ipcMain.handle('save-plugin', savePluginHandler);
+ipcMain.handle('delete-plugin', deletePluginHandler);
+ipcMain.handle('validate-plugin', validatePluginHandler);
+ipcMain.handle('fetch-plugin-from-url', fetchPluginFromUrlHandler);
+ipcMain.handle('bulk-save-plugins', bulkSavePluginsHandler);
+ipcMain.handle('bulk-fetch-plugins', bulkFetchPluginsHandler);
 
 
 // Called when Electron is ready
