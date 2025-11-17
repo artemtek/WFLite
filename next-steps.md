@@ -17,15 +17,15 @@ Suggested next features, prioritized by impact and user value:
 0. **Storage strategy
    - for worfklows
 
-1. **Plugin management UI**
+<!-- 1. **Plugin management UI**
    - Browse/install plugins from a registry
    - View installed plugins with details
    - Enable/disable plugins
    - Import plugins from file/URL
-   - Currently plugins are only loaded from the `plugins/` folder
+   - Currently plugins are only loaded from the `plugins/` folder -->
 
 2. **Node palette/search**
-   - Right-click or sidebar to add nodes
+   <!-- - Right-click or sidebar to add nodes -->
    - Search/filter available plugins
    - Group by category
    - Currently nodes are hardcoded in startup
