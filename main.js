@@ -39,6 +39,9 @@ function createWindow() {
   // Load the frontend HTML file
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
+  // Open DevTools
+  // Note: Autofill protocol errors in DevTools console are harmless and expected in Electron.
+  // They cannot be suppressed as they're logged directly by Electron's DevTools to stderr.
   mainWindow.webContents.openDevTools();
 
   // Show window without stealing focus when ready
