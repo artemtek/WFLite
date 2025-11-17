@@ -1,5 +1,6 @@
 import { lite2lg } from "./scripts/lite-to-lg.js";
 import { getSequence, simplifyGraph } from "./scripts/compile-graph.js";
+import { initPluginManagement } from "./scripts/plugin-management.js";
 
 async function runApp() {
 
@@ -19,12 +20,25 @@ async function runApp() {
     LiteGraph.registered_node_types = customNodes;
   }
 
+  // Function to reload plugins
+  async function reloadPlugins() {
+    try {
+      const plugins = await window.electronAPI.loadPlugins();
+      plugins.forEach(plugin => {
+        const nodeClass = lite2lg(plugin);
+        LiteGraph.registerNodeType("plugin/" + nodeClass.id, nodeClass);
+      });
+      log(`Loaded ${plugins.length} plugin(s)`, 'success');
+    } catch (error) {
+      log(`Error loading plugins: ${error.message}`, 'error');
+    }
+  }
+  
   // Load and register node types
-  const plugins = await window.electronAPI.loadPlugins();
-  plugins.forEach(plugin => {
-    const nodeClass = lite2lg(plugin);
-    LiteGraph.registerNodeType("plugin/" + nodeClass.id, nodeClass);
-  });
+  await reloadPlugins();
+  
+  // Make reloadPlugins available globally
+  window.reloadPlugins = reloadPlugins;
 
   // Create graph and canvas
   const graph = new LGraph();
@@ -173,6 +187,12 @@ async function runApp() {
       log(`Error loading workflow: ${error.message}`, 'error');
     }
   });
+
+  // Initialize plugin management
+  initPluginManagement();
+  
+  // Make log function available globally for plugin management
+  window.log = log;
 
 
 }
