@@ -1,33 +1,3 @@
-class SimpleConverterNode {
-    constructor() {
-
-        // Add input port for the file
-        this.addInput("Input File", "file");
-
-        // Add output port for the converted file
-        this.addOutput("Output File", "file");
-
-        // Set default property for conversion type
-        this.properties = {
-            conversionType: "txt-to-pdf"
-        };
-
-        // Add a widget (combo box) for conversion type selection
-        this.addWidget("combo", "Conversion Type", this.properties.conversionType, (v) => {
-            this.properties.conversionType = v;
-        }, { values: ["txt-to-pdf", "csv-to-json"] });
-
-        // Command template based on the JSON configuration
-        this.command = "docker run --rm simple_converter:latest --input {inputFile} --conversion {conversionType} --output {outputFile}";
-    }
-}
-SimpleConverterNode.id = "simple_converter";
-SimpleConverterNode.title = "Simple File Converter 123";
-SimpleConverterNode.desc = "Converts a file from one format to another using a Docker-based converter.";
-
-// Register the node type in LiteGraph under a custom category ("plugin")
-LiteGraph.registerNodeType("plugin/simple_converter", SimpleConverterNode);
-
 class FolderPickerNode {
     title = "Folder Picker";
     desc = "Select a folder from the user's machine.";
