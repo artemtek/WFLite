@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import {
   loadPluginsHandler,
   executeWorkflowHandler,
+  killWorkflowProcessesHandler,
   dialogSaveFileHandler,
   dialogLoadFileHandler,
   dialogOpenFolderHandler,
@@ -57,6 +58,7 @@ function createWindow() {
 
 // Handle IPC requests
 ipcMain.handle('execute-workflow', executeWorkflowHandler);
+ipcMain.handle('kill-workflow-processes', killWorkflowProcessesHandler);
 ipcMain.handle('load-plugins', loadPluginsHandler);
 ipcMain.handle('dialog-open-file', dialogLoadFileHandler);
 ipcMain.handle('dialog-save-file', dialogSaveFileHandler);

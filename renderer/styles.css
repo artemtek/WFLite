@@ -179,6 +179,22 @@ body {
   background-color: #1a1a1a;
 }
 
+.stop-button {
+  background-color: #3d1a1a;
+  border-color: #e06c75;
+  color: #e06c75;
+}
+
+.stop-button:hover {
+  background-color: #4d2a2a;
+  border-color: #f06c85;
+  color: #f06c85;
+}
+
+.stop-button:active {
+  background-color: #5d3a3a;
+}
+
 /* Plugin Management Modal */
 .modal {
   display: none;

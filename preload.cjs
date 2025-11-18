@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
     executeWorkflow: (workflow) => ipcRenderer.invoke('execute-workflow', workflow),
+    killWorkflowProcesses: () => ipcRenderer.invoke('kill-workflow-processes'),
     loadPlugins: () => ipcRenderer.invoke('load-plugins'),
     dialogOpenFile: () => ipcRenderer.invoke('dialog-open-file'),
     dialogSaveFile: (data) => ipcRenderer.invoke('dialog-save-file', data),

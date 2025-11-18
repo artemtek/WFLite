@@ -122,6 +122,22 @@ async function runApp() {
   }
 
   
+  // Button: Stop Workflow
+  const stopBtn = document.getElementById('stopBtn');
+  stopBtn.addEventListener('click', async () => {
+    try {
+      log('=== Stopping Workflow ===', 'warning');
+      const result = await window.electronAPI.killWorkflowProcesses();
+      if (result.success) {
+        log(`✓ ${result.message}`, 'success');
+      } else {
+        log(`✗ Failed to stop workflow: ${result.message || 'Unknown error'}`, 'error');
+      }
+    } catch (error) {
+      log(`✗ Error stopping workflow: ${error.message}`, 'error');
+    }
+  });
+
   // Button: Execute command
   const executeBtn = document.getElementById('executeBtn');
   executeBtn.addEventListener('click', async () => {

@@ -1,4 +1,5 @@
 import { spawn } from 'child_process';
+import process from 'process';
 import { 
     createWorkflowExecutionDir, 
     resolveNodeInputs, 
@@ -6,6 +7,9 @@ import {
     ensureNodeOutputDir
 } from './workflow-execution.js';
 import { loadPluginsHandler } from './load-plugins.js';
+
+// Track active processes for workflow execution
+const activeProcesses = new Set();
 
 // Graph sequencing functions (for main process)
 function simplifyGraph(graph) {
@@ -158,6 +162,9 @@ function executeCommand(program, args, execDir) {
             stdio: ['inherit', 'pipe', 'pipe']
         });
 
+        // Track this process
+        activeProcesses.add(process);
+
         let output = '';
         let error = '';
 
@@ -174,6 +181,8 @@ function executeCommand(program, args, execDir) {
         });
 
         process.on('close', (code) => {
+            // Remove from active processes
+            activeProcesses.delete(process);
             resolve({
                 success: code === 0,
                 output: output || error,
@@ -182,6 +191,8 @@ function executeCommand(program, args, execDir) {
         });
 
         process.on('error', (err) => {
+            // Remove from active processes
+            activeProcesses.delete(process);
             reject({
                 success: false,
                 error: err.message,
@@ -190,3 +201,71 @@ function executeCommand(program, args, execDir) {
         });
     });
 }
+
+// Kill all active workflow processes
+export const killWorkflowProcessesHandler = async () => {
+    const killedCount = activeProcesses.size;
+    
+    // Kill all tracked processes
+    activeProcesses.forEach(childProcess => {
+        try {
+            // Kill the process and its children
+            if (childProcess.pid) {
+                // On Unix systems, kill the process group
+                if (process.platform !== 'win32') {
+                    childProcess.kill('SIGTERM');
+                    // Force kill after a short delay if needed
+                    setTimeout(() => {
+                        if (!childProcess.killed) {
+                            childProcess.kill('SIGKILL');
+                        }
+                    }, 1000);
+                } else {
+                    // Windows
+                    childProcess.kill();
+                }
+            }
+        } catch (error) {
+            console.error('Error killing process:', error);
+        }
+    });
+    
+    // Clear the set
+    activeProcesses.clear();
+    
+    // Also try to kill any Docker containers that might be running
+    try {
+        const { exec } = await import('child_process');
+        const { promisify } = await import('util');
+        const execAsync = promisify(exec);
+        
+        // Kill all running Docker containers (cross-platform)
+        try {
+            // First, get list of running container IDs
+            const { stdout: containerIds } = await execAsync('docker ps -q', { timeout: 3000 });
+            if (containerIds && containerIds.trim()) {
+                // Kill each container
+                const ids = containerIds.trim().split('\n').filter(id => id);
+                for (const id of ids) {
+                    try {
+                        await execAsync(`docker kill ${id}`, { timeout: 2000 });
+                    } catch (error) {
+                        // Ignore individual container kill errors
+                        console.log(`Note: Could not kill container ${id}:`, error.message);
+                    }
+                }
+            }
+        } catch (error) {
+            // Ignore errors - containers might not exist or command might fail
+            console.log('Note: Could not kill Docker containers:', error.message);
+        }
+    } catch (error) {
+        console.log('Note: Could not execute Docker kill command:', error.message);
+    }
+    
+    return {
+        success: true,
+        killedCount: killedCount,
+        message: `Killed ${killedCount} process(es)`
+    };
+};
