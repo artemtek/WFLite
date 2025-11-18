@@ -70,6 +70,9 @@ export const executeWorkflowHandler = async (event, workflow) => {
         throw new Error('Workflow is required');
     }
 
+    // Track total workflow execution time
+    const workflowStartTime = Date.now();
+
     try {
         // Create execution directory (persistent, cross-platform)
         const workflowName = workflow.name || null;
@@ -90,6 +93,7 @@ export const executeWorkflowHandler = async (event, workflow) => {
 
         // Execute nodes in sequence
         for (const node of sequencedNodes) {
+            const nodeStartTime = Date.now();
             try {
                 console.log(`Executing node ${node.id} (${node.type})`);
 
@@ -116,39 +120,60 @@ export const executeWorkflowHandler = async (event, workflow) => {
 
                 // Format command for logging
                 const commandString = `${program} ${args.join(' ')}`;
-
+                
                 // Execute command
                 const result = await executeCommand(program, args, execDir);
+                
+                const nodeEndTime = Date.now();
+                const nodeDuration = nodeEndTime - nodeStartTime;
+                
                 results.push({
                     nodeId: node.id,
                     nodeType: node.type,
                     success: result.success,
                     output: result.output,
                     outputDir: outputDir,
-                    command: commandString
+                    command: commandString,
+                    duration: nodeDuration
                 });
 
                 if (!result.success) {
                     errors.push(`Node ${node.id} failed: ${result.output}`);
                 }
             } catch (error) {
+                const nodeEndTime = Date.now();
+                const nodeDuration = nodeEndTime - nodeStartTime;
                 errors.push(`Node ${node.id} error: ${error.message}`);
                 results.push({
                     nodeId: node.id,
                     success: false,
-                    error: error.message
+                    error: error.message,
+                    duration: nodeDuration
                 });
             }
         }
+
+        const workflowEndTime = Date.now();
+        const totalDuration = workflowEndTime - workflowStartTime;
 
         return {
             success: errors.length === 0,
             executionDir: execDir,
             results: results,
             errors: errors,
-            summary: `${results.length} nodes executed, ${errors.length} errors`
+            summary: `${results.length} nodes executed, ${errors.length} errors`,
+            timing: {
+                totalDuration: totalDuration,
+                nodeTimings: results.map(r => ({
+                    nodeId: r.nodeId,
+                    nodeType: r.nodeType,
+                    duration: r.duration || 0
+                }))
+            }
         };
     } catch (error) {
+        const workflowEndTime = Date.now();
+        const totalDuration = workflowEndTime - workflowStartTime;
         throw new Error(`Workflow execution failed: ${error.message}`);
     }
 }

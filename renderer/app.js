@@ -169,6 +169,10 @@ async function runApp() {
             log(`Command: ${nodeResult.command}`, 'info');
           }
           log(`Status: ${nodeResult.success ? '✓ Success' : '✗ Failed'}`, nodeResult.success ? 'success' : 'error');
+          if (nodeResult.duration !== undefined) {
+            const durationSeconds = (nodeResult.duration / 1000).toFixed(2);
+            log(`Duration: ${durationSeconds}s`, 'info');
+          }
           if (nodeResult.outputDir) {
             log(`Output directory: ${nodeResult.outputDir}`);
           }
@@ -183,9 +187,34 @@ async function runApp() {
         result.errors.forEach(error => log(`✗ ${error}`, 'error'));
       }
       
+      // Display timing statistics
+      if (result.timing) {
+        log('\n=== Execution Statistics ===', 'info');
+        const totalSeconds = (result.timing.totalDuration / 1000).toFixed(2);
+        const totalMinutes = Math.floor(result.timing.totalDuration / 60000);
+        const totalSecondsRemainder = ((result.timing.totalDuration % 60000) / 1000).toFixed(2);
+        
+        if (totalMinutes > 0) {
+          log(`Total Workflow Duration: ${totalMinutes}m ${totalSecondsRemainder}s`, 'success');
+        } else {
+          log(`Total Workflow Duration: ${totalSeconds}s`, 'success');
+        }
+        
+        if (result.timing.nodeTimings && result.timing.nodeTimings.length > 0) {
+          log('\nNode Execution Times:', 'info');
+          result.timing.nodeTimings.forEach(timing => {
+            const nodeSeconds = (timing.duration / 1000).toFixed(2);
+            const nodeTypeDisplay = timing.nodeType ? timing.nodeType.replace('plugin/', '') : 'unknown';
+            log(`  • Node ${timing.nodeId} (${nodeTypeDisplay}): ${nodeSeconds}s`, 'info');
+          });
+        }
+      }
+      
       log(`\n=== ${result.summary || 'Workflow execution completed'} ===`, result.success !== false ? 'success' : 'info');
+      log('=== Workflow Ended ===', result.success !== false ? 'success' : 'warning');
     } catch (error) {
       log(`✗ Error: ${error.message}`, 'error');
+      log('=== Workflow Ended (with errors) ===', 'error');
     }
   });
 
