@@ -1,0 +1,50 @@
+{
+  "id": "artemtek-detect-objects",
+  "name": "Detect Objects",
+  "description": "Detects objects in images using YOLOv8n (lightweight AI model). Outputs detected objects as text files with class names, confidence scores, and bounding boxes.",
+  "version": "1.0.0",
+  "inputs": [
+    {
+      "id": "inputDir",
+      "name": "Input Directory",
+      "type": "directory",
+      "description": "Directory containing images to analyze (PNG, JPG, TIFF, BMP, GIF, WEBP).",
+      "required": true
+    },
+    {
+      "id": "confidence",
+      "name": "Confidence Threshold",
+      "type": "number",
+      "description": "Minimum confidence for detections (0.0-1.0). Lower values detect more objects but may include false positives.",
+      "required": false,
+      "default": 0.25,
+      "ui": {
+        "control": "slider",
+        "min": 0.0,
+        "max": 1.0,
+        "step": 0.05
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "id": "outputDir",
+      "name": "Output Directory",
+      "type": "directory",
+      "description": "Directory where detection results will be saved (one .txt and one .json file per image)."
+    }
+  ],
+  "command": {
+    "program": "docker",
+    "args": [
+      "run",
+      "--rm",
+      "artemtek/detect-objects:latest",
+      "/input/inputDir",
+      "/output",
+      "--confidence",
+      "{confidence}"
+    ]
+  }
+}
+
