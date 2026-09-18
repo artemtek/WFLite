@@ -1,5 +1,5 @@
 {
-  "id": "artemtek-to-black-and-white",
+  "id": "to-black-and-white",
   "name": "To Black and White",
   "description": "Converts images in the input directory to black and white (grayscale).",
   "version": "1.0.0",
@@ -25,7 +25,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/to-black-and-white:latest",
+      "lite/to-black-and-white:latest",
       "/input/inputDir",
       "/output"
     ]

@@ -1,6 +1,6 @@
 {
-  "id": "artemtek-image-to-text",
-  "name": "Artemtek Image to Text",
+  "id": "image-to-text",
+  "name": "Image to Text",
   "description": "Converts images (screenshots, photos, etc.) to text using OCR. Processes all images in the input directory.",
   "version": "1.0.0",
   "inputs": [
@@ -20,6 +20,6 @@
       "description": "Directory where text files will be saved (one .txt file per image)."
     }
   ],
-  "dockerImage": "artemtek/image-to-text:latest"
+  "dockerImage": "lite/image-to-text:latest"
 }
 

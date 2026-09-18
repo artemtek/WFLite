@@ -1,5 +1,5 @@
 {
-  "id": "artemtek-detect-objects",
+  "id": "detect-objects",
   "name": "Detect Objects",
   "description": "Detects objects in images using YOLOv8n (lightweight AI model). Outputs detected objects as text files with class names, confidence scores, and bounding boxes.",
   "version": "1.0.0",
@@ -39,7 +39,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/detect-objects:latest",
+      "lite/detect-objects:latest",
       "/input/inputDir",
       "/output",
       "--confidence",

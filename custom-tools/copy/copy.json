@@ -1,6 +1,6 @@
 {
-  "id": "artemtek-copy",
-  "name": "Artemtek Copy",
+  "id": "copy",
+  "name": "Copy",
   "description": "Copies all files and directories from Input Directory to Output Directory.",
   "version": "1.0.0",
   "inputs": [
@@ -25,7 +25,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/copy:latest",
+      "lite/copy:latest",
       "/input/inputDir",
       "/output"
     ]

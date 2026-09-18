@@ -9,8 +9,8 @@ Lite is a local Go server plus web UI. It does not run plugin code itself. It ru
 Do all of these:
 
 1. Create `custom-tools/{plugin-name}/` (source of truth: Dockerfile, script, JSON, README).
-2. Copy the JSON to `plugins/{owner}-{plugin-name}.json` (this is what the app loads).
-3. Build the image locally: `docker build -t {owner}/{plugin-name}:latest custom-tools/{plugin-name}`.
+2. Copy the JSON to `plugins/{plugin-name}.json` (this is what the app loads).
+3. Build the image locally: `docker build -t lite/{plugin-name}:latest custom-tools/{plugin-name}`.
 4. Keep JSON in both places in sync. Do not register a plugin that has no image, or an image with no JSON.
 
 Existing tools live under `custom-tools/` (copy, image-to-ascii, detect-objects, …). Match their layout.
@@ -25,7 +25,7 @@ custom-tools/{plugin-name}/
   {plugin-name}.json
   README.md
 
-plugins/{owner}-{plugin-name}.json   # identical JSON; required for the UI
+plugins/{plugin-name}.json   # identical JSON; required for the UI
 ```
 
 **Names**
@@ -33,11 +33,11 @@ plugins/{owner}-{plugin-name}.json   # identical JSON; required for the UI
 | What | Pattern | Example |
 |------|---------|---------|
 | Folder | `{plugin-name}` | `image-to-ascii` |
-| Plugin `id` | `{owner}-{plugin-name}` | `artemtek-image-to-ascii` |
-| Docker image | `{owner}/{plugin-name}:latest` | `artemtek/image-to-ascii:latest` |
-| Registry JSON | `plugins/{id}.json` | `plugins/artemtek-image-to-ascii.json` |
+| Plugin `id` | `{plugin-name}` | `image-to-ascii` |
+| Docker image | `lite/{plugin-name}:latest` | `lite/image-to-ascii:latest` |
+| Registry JSON | `plugins/{plugin-name}.json` | `plugins/image-to-ascii.json` |
 
-In this repo the owner is **`artemtek`** unless the user names another.
+Do not put a personal or org prefix in plugin ids, image tags, or display names.
 
 ## Runtime contract
 
@@ -69,7 +69,7 @@ Host output path after a run: `~/lite-workflows/{execution-id}/node-{id}/`.
 docker run --rm \
   -v /path/to/input:/input/inputDir \
   -v /path/to/output:/output \
-  artemtek/{plugin-name}:latest \
+  lite/{plugin-name}:latest \
   /input/inputDir /output
 ```
 
@@ -81,8 +81,8 @@ The UI reads `plugins/*.json`. Either `dockerImage` **or** `command` is required
 
 ```json
 {
-  "id": "artemtek-copy",
-  "name": "Artemtek Copy",
+  "id": "copy",
+  "name": "Copy",
   "description": "Copies all files from the input directory to the output directory.",
   "version": "1.0.0",
   "inputs": [
@@ -102,7 +102,7 @@ The UI reads `plugins/*.json`. Either `dockerImage` **or** `command` is required
       "description": "Copied files."
     }
   ],
-  "dockerImage": "artemtek/copy:latest"
+  "dockerImage": "lite/copy:latest"
 }
 ```
 
@@ -114,7 +114,7 @@ The UI reads `plugins/*.json`. Either `dockerImage` **or** `command` is required
   "args": [
     "run",
     "--rm",
-    "artemtek/image-to-ascii:latest",
+    "lite/image-to-ascii:latest",
     "/input/inputDir",
     "/output",
     "--width",

@@ -1,5 +1,5 @@
 {
-  "id": "artemtek-upscale-image",
+  "id": "upscale-image",
   "name": "Upscale Image",
   "description": "Upscales images in the input directory by a specified factor.",
   "version": "1.0.0",
@@ -36,7 +36,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/upscale-image:latest",
+      "lite/upscale-image:latest",
       "/input/inputDir",
       "/output",
       "{scaleFactor}"

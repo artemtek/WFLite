@@ -1,4 +1,4 @@
-# Artemtek Image to Text Plugin
+# Image to Text Plugin
 
 An OCR (Optical Character Recognition) plugin that converts images to text files. Perfect for extracting text from screenshots, scanned documents, photos of text, and more.
 
@@ -41,7 +41,7 @@ When used in a workflow:
 Build the Docker image:
 ```bash
 cd custom-tools/image-to-text
-docker build -t artemtek/image-to-text:latest .
+docker build -t lite/image-to-text:latest .
 ```
 
 ## Technical Details

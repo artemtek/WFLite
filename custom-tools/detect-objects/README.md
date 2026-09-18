@@ -58,7 +58,7 @@ Detailed detections:
 
 ```bash
 cd custom-tools/detect-objects
-docker build -t artemtek/detect-objects:latest .
+docker build -t lite/detect-objects:latest .
 ```
 
 ## Model

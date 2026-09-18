@@ -1,5 +1,5 @@
 {
-  "id": "artemtek-downscale-image",
+  "id": "downscale-image",
   "name": "Downscale Image",
   "description": "Downscales images in the input directory by a specified factor.",
   "version": "1.0.0",
@@ -36,7 +36,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/downscale-image:latest",
+      "lite/downscale-image:latest",
       "/input/inputDir",
       "/output",
       "{scaleFactor}"

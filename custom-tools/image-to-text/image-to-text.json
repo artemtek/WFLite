@@ -1,6 +1,6 @@
 {
-  "id": "artemtek-image-to-text",
-  "name": "Artemtek Image to Text",
+  "id": "image-to-text",
+  "name": "Image to Text",
   "description": "Converts images (screenshots, photos, etc.) to text using OCR. Processes all images in the input directory.",
   "version": "1.0.0",
   "inputs": [
@@ -25,7 +25,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/image-to-text:latest",
+      "lite/image-to-text:latest",
       "/input/inputDir",
       "/output"
     ]

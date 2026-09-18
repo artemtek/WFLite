@@ -1,6 +1,6 @@
 {
-  "id": "artemtek-copy",
-  "name": "Artemtek Copy",
+  "id": "copy",
+  "name": "Copy",
   "description": "Copies all files and directories from Input Directory to Output Directory.",
   "version": "1.0.0",
   "inputs": [
@@ -20,6 +20,6 @@
       "description": "The destination directory where files will be copied."
     }
   ],
-  "dockerImage": "artemtek/copy:latest"
+  "dockerImage": "lite/copy:latest"
 }
 

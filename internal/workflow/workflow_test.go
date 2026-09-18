@@ -14,7 +14,7 @@ func TestSequence(t *testing.T) {
 	g := Graph{
 		Nodes: []Node{
 			{ID: "1", Type: "input/folder_picker"},
-			{ID: "2", Type: "plugin/artemtek-copy"},
+			{ID: "2", Type: "plugin/copy"},
 		},
 		Links: []json.RawMessage{json.RawMessage(`[1,1,0,2,0,"directory"]`)},
 	}
@@ -84,12 +84,12 @@ func TestSequenceCycleHasNoStart(t *testing.T) {
 
 func TestBuildDockerCopy(t *testing.T) {
 	p := plugins.Plugin{
-		ID:          "artemtek-copy",
-		DockerImage: "artemtek/copy:latest",
+		ID:          "copy",
+		DockerImage: "lite/copy:latest",
 		Inputs:      []plugins.Input{{ID: "inputDir", Type: "directory"}},
 		Outputs:     []plugins.Output{{ID: "outputDir"}},
 	}
-	node := Node{ID: "2", Type: "plugin/artemtek-copy", Properties: map[string]any{"_command": "x"}}
+	node := Node{ID: "2", Type: "plugin/copy", Properties: map[string]any{"_command": "x"}}
 	cmd, err := buildDockerCommand(node, map[int]string{0: "/tmp/in"}, "/tmp/exec", p, "lite-test-n2")
 	if err != nil {
 		t.Fatal(err)
@@ -100,7 +100,7 @@ func TestBuildDockerCopy(t *testing.T) {
 	if filepath.Base(cmd.OutputDir) != "node-2" {
 		t.Fatalf("output=%s", cmd.OutputDir)
 	}
-	want := []string{"run", "--rm", "--name", "lite-test-n2", "-v", "/tmp/in:/input/inputDir", "-v", cmd.OutputDir + ":/output", "artemtek/copy:latest", "/input/inputDir", "/output"}
+	want := []string{"run", "--rm", "--name", "lite-test-n2", "-v", "/tmp/in:/input/inputDir", "-v", cmd.OutputDir + ":/output", "lite/copy:latest", "/input/inputDir", "/output"}
 	if !reflect.DeepEqual(cmd.Args, want) {
 		t.Fatalf("args=%v want=%v", cmd.Args, want)
 	}
@@ -130,7 +130,7 @@ func TestResolveInputsFromFolderPicker(t *testing.T) {
 	g := Graph{
 		Nodes: []Node{
 			{ID: "1", Type: "input/folder_picker", Properties: map[string]any{"folder": "/photos"}},
-			{ID: "2", Type: "plugin/artemtek-copy"},
+			{ID: "2", Type: "plugin/copy"},
 		},
 		Links: []json.RawMessage{json.RawMessage(`[1,1,0,2,0,"directory"]`)},
 	}

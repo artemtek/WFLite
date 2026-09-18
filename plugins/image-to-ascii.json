@@ -1,6 +1,6 @@
 {
-  "id": "artemtek-image-to-ascii",
-  "name": "Artemtek Image to ASCII",
+  "id": "image-to-ascii",
+  "name": "Image to ASCII",
   "description": "Converts images to ASCII art text files. Processes all images in the input directory.",
   "version": "1.0.0",
   "inputs": [
@@ -36,7 +36,7 @@
     "args": [
       "run",
       "--rm",
-      "artemtek/image-to-ascii:latest",
+      "lite/image-to-ascii:latest",
       "/input/inputDir",
       "/output",
       "--width",

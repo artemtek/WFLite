@@ -1,4 +1,4 @@
-# Artemtek Image to ASCII Plugin
+# Image to ASCII Plugin
 
 A plugin that converts images to ASCII art text files. Perfect for creating text-based representations of images, logos, or artwork.
 
@@ -50,7 +50,7 @@ When used in a workflow:
 Build the Docker image:
 ```bash
 cd custom-tools/image-to-ascii
-docker build -t artemtek/image-to-ascii:latest .
+docker build -t lite/image-to-ascii:latest .
 ```
 
 ## Technical Details

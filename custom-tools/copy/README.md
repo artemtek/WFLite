@@ -1,4 +1,4 @@
-# Artemtek Copy Plugin
+# Copy Plugin
 
 A simple plugin that copies all files and directories from an input directory to an output directory.
 
@@ -30,7 +30,7 @@ When used in a workflow:
 Build the Docker image:
 ```bash
 cd custom-tools/copy
-docker build -t artemtek/copy:latest .
+docker build -t lite/copy:latest .
 ```
 
 ## Script
