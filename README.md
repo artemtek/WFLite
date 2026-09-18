@@ -36,4 +36,4 @@ go test ./...
 
 ## Plugins
 
-JSON files in `plugins/` (see `AGENTS.md`). The server reads that directory next to the working directory, or next to the binary.
+JSON files in `plugins/` (see [docs/AGENTS.md](docs/AGENTS.md) for how to build tools). The server reads that directory next to the working directory, or next to the binary.
