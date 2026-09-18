@@ -5,3 +5,6 @@
 /coverage
 /logs
 /temp
+/lite
+/lite.exe
+*.exe

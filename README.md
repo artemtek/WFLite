@@ -1,18 +1,39 @@
-# Workflow Editor
+# Lite
 
-## Overview
+Local workflow editor for Dockerized tools. One binary serves a web UI on localhost and runs `docker` on your machine.
 
-This is a workflow editor app. It will contain LiteGraph.js for UI and spawn commands, either docker or local to run commands.
+## Run
 
-## Getting Started
+```bash
+go run . -no-open
+```
 
-### Prerequisites
+Then open http://127.0.0.1:7474/
 
-- Node.js 24.x
-- npm 10.x
+Or build a single binary:
 
-### Installation
+```bash
+go build -o lite .
+./lite
+```
 
-1. Clone the repository
-2. Run `npm install`
-3. Run `npm start`
+Flags:
+
+- `-addr 127.0.0.1:7474` listen address
+- `-plugins ./plugins` plugin JSON directory
+- `-no-open` do not launch a browser
+
+Requires Docker on `PATH` to execute workflows.
+
+```bash
+go test ./...
+```
+
+## UI
+
+- **Workflow** — LiteGraph editor, start/stop runs, plugin manager
+- **Files** — browse the host filesystem (folder picker + later, run outputs under `~/lite-workflows`)
+
+## Plugins
+
+JSON files in `plugins/` (see `AGENTS.md`). The server reads that directory next to the working directory, or next to the binary.

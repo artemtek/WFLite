@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lite — Files</title>
+  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="files-page">
+  <nav class="app-nav">
+    <a href="/">Workflow</a>
+    <a href="/files.html" class="active">Files</a>
+    <span class="app-nav-title">Lite</span>
+  </nav>
+  <div class="files-layout">
+    <div class="files-toolbar">
+      <button class="button" id="upBtn">Up</button>
+      <button class="button" id="homeBtn">Home</button>
+      <button class="button" id="workflowsBtn">Workflow outputs</button>
+      <input class="files-path" id="pathInput" spellcheck="false">
+      <button class="button" id="goBtn">Go</button>
+    </div>
+    <p class="files-banner" id="pickBanner" hidden>Choose a folder, then click Use this folder.</p>
+    <div class="files-actions">
+      <button class="button" id="useFolderBtn">Use this folder</button>
+      <span class="files-hint" id="currentLabel"></span>
+    </div>
+    <div class="files-table-wrap">
+      <table class="files-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size</th>
+          </tr>
+        </thead>
+        <tbody id="filesBody">
+          <tr><td colspan="3">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="files-error" id="filesError"></p>
+  </div>
+  <script type="module" src="/files.js"></script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lite</title>
+  <link rel="icon" type="image/x-icon" href="/icons/favicon.ico">
+  <link rel="stylesheet" href="/vendor/litegraph.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <nav class="app-nav">
+    <a href="/" class="active">Workflow</a>
+    <a href="/files.html" id="filesNavLink">Files</a>
+    <span class="app-nav-title">Lite</span>
+  </nav>
+  <div class="workspace">
+    <div class="top-buttons">
+      <div class="button-group">
+        <div class="add-node-container">
+          <button id="addNodeBtn" class="button">Add Node</button>
+          <div id="nodeMenu" class="node-menu" style="display: none;">
+            <div class="node-menu-search">
+              <input type="text" id="nodeSearchInput" placeholder="Search nodes...">
+            </div>
+            <div id="nodeMenuList" class="node-menu-list"></div>
+          </div>
+        </div>
+      </div>
+      <div class="button-group">
+        <button id="executeBtn" class="button">Start Workflow</button>
+        <button id="stopBtn" class="button stop-button">Stop Workflow</button>
+      </div>
+      <div class="button-group">
+        <button id="saveBtn" class="button">Save File</button>
+        <button id="loadBtn" class="button">Load File</button>
+        <input type="file" id="loadFileInput" accept=".json,application/json" hidden>
+      </div>
+    </div>
+    <div class="graph-container">
+      <button id="pluginsBtn" class="button plugins-button">Manage Plugins</button>
+      <canvas id="mycanvas"></canvas>
+    </div>
+    <div class="log-container">
+      <pre id="log">System initialized...
+></pre>
+    </div>
+  </div>
+
+  <div id="pluginModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Plugin Management</h2>
+        <button class="modal-close" id="pluginModalClose">&times;</button>
+      </div>
+      <div class="modal-tabs">
+        <button class="tab-button active" data-tab="installed">Installed</button>
+        <button class="tab-button" data-tab="upload">Bulk Upload</button>
+        <button class="tab-button" data-tab="url">From URL</button>
+        <button class="tab-button" data-tab="editor">Text Editor</button>
+      </div>
+      <div class="tab-content active" id="tab-installed">
+        <div class="plugins-list" id="pluginsList">
+          <p>Loading plugins...</p>
+        </div>
+        <button class="button" id="refreshPluginsBtn">Refresh</button>
+      </div>
+      <div class="tab-content" id="tab-upload">
+        <div class="upload-area">
+          <input type="file" id="bulkUploadInput" multiple accept=".json,.yaml" style="display: none;">
+          <button class="button" id="selectFilesBtn">Select Files</button>
+          <div id="uploadedFilesList"></div>
+        </div>
+        <button class="button" id="processUploadBtn" disabled>Upload Selected Files</button>
+      </div>
+      <div class="tab-content" id="tab-url">
+        <textarea id="urlListTextarea" placeholder="Enter URLs (one per line):" rows="10"></textarea>
+        <button class="button" id="fetchUrlsBtn">Fetch Plugins</button>
+        <div id="urlFetchResults"></div>
+      </div>
+      <div class="tab-content" id="tab-editor">
+        <textarea id="pluginEditorTextarea" placeholder="Paste plugin JSON here..." rows="20"></textarea>
+        <div class="editor-actions">
+          <button class="button" id="validateEditorBtn">Validate</button>
+          <button class="button" id="saveEditorBtn" disabled>Save Plugin</button>
+        </div>
+        <div id="editorValidationResults"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/vendor/litegraph.js"></script>
+  <script src="/nodes.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
